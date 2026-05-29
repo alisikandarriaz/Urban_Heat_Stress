@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HotEurope — Urban Heat Stress</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ── Header ── -->
+  <header class="ui-hdr">
+    <img src="assets/logo.png" alt="HotEurope" class="logo">
+    <div class="hdr-left">
+      <h1 class="app-title">Urban Heat Stress</h1>
+      <select id="city-sel" class="city-sel" onchange="APP.setCity(this.value)">
+        <option value="">Select CIVIS city (11)&hellip;</option>
+        <option value="marseille">Aix-en-Provence &amp; Marseille, FR</option>
+        <option value="athens">Athens, GR</option>
+        <option value="bucharest">Bucharest, RO</option>
+        <option value="brussels">Brussels, BE</option>
+        <option value="glasgow">Glasgow, UK</option>
+        <option value="lausanne">Lausanne, CH</option>
+        <option value="madrid">Madrid, ES</option>
+        <option value="rome">Rome, IT</option>
+        <option value="salzburg">Salzburg, AT</option>
+        <option value="stockholm">Stockholm, SE</option>
+        <option value="tuebingen">T&uuml;bingen, DE</option>
+      </select>
+    </div>
+
+    <!-- Weather badge: temp | wind | local time | UTC -->
+    <div class="wx-badge" id="wx-badge">
+      <i class="ti ti-sun" id="wx-icon" style="font-size:15px;color:#F97316"></i>
+      <span id="wx-temp" style="font-weight:600">--&deg;C</span>
+      <span id="wx-wind" class="wx-detail">-- kt</span>
+      <span class="wx-sep">|</span>
+      <span id="wx-local" class="wx-detail">--</span>
+      <span class="wx-sep">|</span>
+      <span id="wx-obs" class="wx-detail wx-utc">-- UTC</span>
+    </div>
+
+    <div class="hdr-right">
+      <button class="hdr-btn" id="analytics-btn" onclick="APP.toggleAnalytics()">
+        <i class="ti ti-chart-bar"></i><span class="btn-lbl">Analytics</span>
+      </button>
+      <div class="hdr-sep"></div>
+      <button class="hdr-btn" onclick="APP.exportPDF()"><i class="ti ti-file-type-pdf"></i><span class="btn-lbl">PDF</span></button>
+      <button class="hdr-btn" onclick="APP.exportGeoJSON()"><i class="ti ti-map-2"></i><span class="btn-lbl">GeoJSON</span></button>
+      <button class="hdr-btn" onclick="APP.exportCSV()"><i class="ti ti-table-export"></i><span class="btn-lbl">CSV</span></button>
+      <div class="hdr-sep"></div>
+      <button class="hdr-btn" id="theme-btn" onclick="APP.toggleTheme()" title="Toggle theme"><i class="ti ti-sun"></i></button>
+    </div>
+  </header>
+
+  <!-- ── Body ── -->
+  <div class="ui-body">
+
+    <!-- LEFT: Layer controls -->
+    <aside class="left-panel">
+
+      <div class="grp-lbl">HEAT ANALYSIS</div>
+      <label class="layer-row"><input type="checkbox" id="cb-lst" onchange="APP.toggleL('lst',this.checked)"><span class="sw grad-lst"></span><span class="lyr-name">LST (&deg;C)</span><button class="xml-btn" onclick="APP.dlXML('lst')">XML</button></label>
+      <label class="layer-row"><input type="checkbox" id="cb-uhi" onchange="APP.toggleL('uhi',this.checked)"><span class="sw grad-uhi"></span><span class="lyr-name">UHI index</span><button class="xml-btn" onclick="APP.dlXML('uhi')">XML</button></label>
+      <label class="layer-row grp-gap"><input type="checkbox" id="cb-utfvi" onchange="APP.toggleL('utfvi',this.checked)"><span class="sw grad-utfvi"></span><span class="lyr-name">UTFVI class</span><button class="xml-btn" onclick="APP.dlXML('utfvi')">XML</button></label>
+
+      <div class="grp-lbl">BIODIVERSITY</div>
+      <label class="layer-row"><input type="checkbox" id="cb-n2k" onchange="APP.toggleL('n2k',this.checked)"><span class="sw-dot-out"></span><span class="lyr-name">Natura 2000</span><button class="xml-btn" onclick="APP.dlXML('n2k')">XML</button></label>
+      <label class="layer-row"><input type="checkbox" id="cb-gbif" onchange="APP.toggleL('gbif',this.checked)"><span class="sw-dot" style="background:#86EFAC"></span><span class="lyr-name">Species density</span><button class="xml-btn" onclick="APP.dlXML('gbif')">XML</button></label>
+      <label class="layer-row"><input type="checkbox" id="cb-trees" onchange="APP.toggleL('trees',this.checked)"><span class="sw" style="background:#22C55E"></span><span class="lyr-name">Street trees</span><button class="xml-btn" onclick="APP.dlXML('trees')">XML</button></label>
+      <label class="layer-row grp-gap"><input type="checkbox" id="cb-green" onchange="APP.toggleL('green',this.checked)"><span class="sw" style="background:#4ADE80"></span><span class="lyr-name">Green spaces</span><button class="xml-btn" onclick="APP.dlXML('green')">XML</button></label>
+
+      <div class="grp-lbl">URBAN ATLAS / LAND USE</div>
+      <label class="layer-row"><input type="checkbox" id="cb-lu" onchange="APP.toggleL('lu',this.checked)"><span class="sw" style="background:#A78BFA"></span><span class="lyr-name">Land use 2018</span><button class="xml-btn" onclick="APP.dlXML('lu')">XML</button></label>
+      <label class="layer-row grp-gap"><input type="checkbox" id="cb-imp" onchange="APP.toggleL('imp',this.checked)"><span class="sw" style="background:#9CA3AF"></span><span class="lyr-name">Impervious surf.</span><button class="xml-btn" onclick="APP.dlXML('imp')">XML</button></label>
+
+      <div class="grp-lbl">REFERENCE</div>
+      <label class="layer-row"><input type="checkbox" id="cb-study" onchange="APP.toggleL('study',this.checked)"><span class="sw-dash" style="border-color:#F97316"></span><span class="lyr-name">Study area</span><button class="xml-btn" onclick="APP.dlXML('study')">XML</button></label>
+      <label class="layer-row grp-gap"><input type="checkbox" id="cb-nuts" onchange="APP.toggleL('nuts',this.checked)"><span class="sw-dash"></span><span class="lyr-name">NUTS3 boundary</span><button class="xml-btn" onclick="APP.dlXML('nuts')">XML</button></label>
+
+      <div class="grp-lbl">BASEMAP</div>
+      <div class="bm-group">
+        <button class="bm-btn" data-bm="carto" onclick="APP.setBM('carto')">CartoDB Positron</button>
+        <button class="bm-btn" data-bm="osm"   onclick="APP.setBM('osm')">OpenStreetMap</button>
+        <button class="bm-btn" data-bm="esri"  onclick="APP.setBM('esri')">Esri Imagery</button>
+      </div>
+
+    </aside>
+
+    <!-- CENTER: Map -->
+    <div class="map-wrap">
+      <div id="map"></div>
+
+      <div id="map-loading">
+        <div class="spinner"></div>
+        <span id="load-msg">Loading&hellip;</span>
+      </div>
+
+      <!-- Stats pills overlaid on map (top-left) -->
+      <div class="stats-bar" id="stats-bar">
+        <div class="stat-pill"><i class="ti ti-temperature" style="color:#EF4444;font-size:12px"></i><span id="sb-lst" style="color:#EF4444;font-weight:600">--</span><small>LST</small></div>
+        <div class="stat-pill"><i class="ti ti-arrow-badge-up" style="color:#A78BFA;font-size:12px"></i><span id="sb-uhi" style="color:#A78BFA;font-weight:600">--</span><small>UHI</small></div>
+        <div class="stat-pill"><i class="ti ti-leaf" style="color:#22C55E;font-size:12px"></i><span id="sb-green" style="color:#22C55E;font-weight:600">--%</span><small>green</small></div>
+        <div class="stat-pill"><i class="ti ti-temperature" style="color:#60A5FA;font-size:12px"></i><span id="sb-wx" style="color:#60A5FA;font-weight:600">--</span><small>live</small></div>
+      </div>
+
+      <!-- Feature info panel -->
+      <div id="info-panel">
+        <div class="info-hdr">
+          <span>Feature info</span>
+          <button class="info-close" onclick="APP.closeInfo()"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="info-block">
+          <div class="info-row"><span class="lbl">LST</span><span class="val hot" id="ip-lst">--</span></div>
+          <div class="info-row"><span class="lbl">UHI index</span><span class="val" id="ip-uhi">--</span></div>
+          <div class="info-row"><span class="lbl">UTFVI class</span><span class="val" id="ip-utfvi">--</span></div>
+          <div class="info-row"><span class="lbl">Land use</span><span class="val" id="ip-lu">--</span></div>
+          <div class="info-row"><span class="lbl">NUTS3</span><span class="val" id="ip-nuts">--</span></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title">Live weather (METAR)</div>
+          <div class="info-row"><span class="lbl">Temperature</span><span class="val" style="color:#60A5FA" id="ip-temp">--</span></div>
+          <div class="info-row"><span class="lbl">Dew point</span><span class="val" id="ip-dewp">--</span></div>
+          <div class="info-row"><span class="lbl">Wind</span><span class="val" id="ip-wind">--</span></div>
+          <div class="info-row"><span class="lbl">Observed</span><span class="val" style="font-size:10px" id="ip-obs">--</span></div>
+        </div>
+      </div>
+
+      <div id="click-hint">Click map to inspect</div>
+    </div>
+
+    <!-- RIGHT: Description only -->
+    <aside class="right-panel">
+      <button class="desc-toggle" onclick="APP.toggleDesc()">
+        <span class="desc-title">
+          <img src="assets/logo.png" alt="" class="desc-logo"> HotEurope
+        </span>
+        <i class="ti ti-chevron-up" id="desc-chevron"></i>
+      </button>
+      <div class="desc-body" id="desc-body">
+        <p class="desc-text">
+          Sustainable Development Goal 11 by the United Nations promotes sustainable
+          cities. Human-induced transformation of land surfaces and global warming
+          are the main drivers of urban heat islands.
+        </p>
+        <p class="desc-text">
+          HotEurope is an SDI helping urban planners tackle this challenge. Activate
+          <strong>LST</strong>, <strong>UHI</strong> and <strong>UTFVI</strong> to
+          identify vulnerable areas, then overlay street trees, land cover,
+          biodiversity and impervious surfaces to understand the drivers.
+        </p>
+        <p class="desc-text">
+          Results span all 11 CIVIS alliance cities, enabling cross-border comparison
+          and learning from best-practice areas.
+        </p>
+        <a class="wiki-link" href="https://git.sbg.ac.at/st26_856.213/sdi_uhi/-/wikis/home"
+           target="_blank" rel="noopener">
+          <i class="ti ti-book"></i> HotEurope Wiki
+        </a>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ── Analytics drawer ── -->
+  <div class="a-drawer" id="a-drawer">
+    <div class="a-inner">
+      <div class="a-hdr"><h2>Analytics &mdash; <span id="chart-city">select a city</span></h2></div>
+      <div class="charts-grid">
+        <div class="chart-card"><h3>24h temperature trend &mdash; live METAR data</h3><canvas id="ch-trend" style="display:none"></canvas><div class="no-data" id="trend-msg"></div></div>
+        <div class="chart-card"><h3>Land surface temperature &mdash; all CIVIS cities (&deg;C)</h3><canvas id="ch-lst"></canvas></div>
+        <div class="chart-card"><h3>UHI index ranking &mdash; all CIVIS cities</h3><canvas id="ch-uhi"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer / Legend ── -->
+  <footer class="ui-footer">
+    <strong>Legend</strong>
+    <span class="leg-item"><span class="leg-ramp grad-lst"></span>LST</span>
+    <span class="leg-item"><span class="leg-dot" style="border:1.5px solid #16A34A;background:transparent;display:inline-block"></span>Natura 2000</span>
+    <span class="leg-item"><span class="leg-dot" style="background:#86EFAC;display:inline-block"></span>Species</span>
+    <span class="leg-item"><span class="leg-dot" style="background:#22C55E;display:inline-block"></span>Trees</span>
+    <span class="leg-item"><span class="leg-dash" style="border-color:#F97316"></span>Study area</span>
+    <span class="leg-item"><span class="leg-dash"></span>NUTS3</span>
+    <span class="leg-src">Landsat 8 &middot; Copernicus &middot; GBIF &middot; Eurostat &middot; Aviation Weather API &middot; Z_GIS PLUS Salzburg</span>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/map.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
