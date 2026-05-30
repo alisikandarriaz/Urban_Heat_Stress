@@ -1,11 +1,10 @@
 /**
  * weather.js
- * Tries Node-RED API first, falls back to Open-Meteo.
- * Shows local city time alongside UTC in the header badge.
+ * Fetches ONLY from Node-RED / our PostgreSQL database.
+ * No external fallback — data must come from our own DB.
  */
 
-APP.wxCache    = {};
-APP.wx24hCache = null;
+APP.wxCache = {};
 
 APP.loadWeather = async function () {
   try {
@@ -17,38 +16,18 @@ APP.loadWeather = async function () {
     if (APP.curKey) APP.updateWxBadge(APP.curKey);
     console.log('[Weather] Node-RED OK:', rows.length, 'cities');
   } catch (e) {
-    console.warn('[Weather] Node-RED failed (' + e.message + '), falling back to Open-Meteo');
-    if (APP.curKey) APP._loadOpenMeteo(APP.curKey);
-  }
-};
-
-APP._loadOpenMeteo = async function (key) {
-  const c = APP.CITIES[key];
-  try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${c.center[0]}&longitude=${c.center[1]}&current_weather=true&timezone=auto`;
-    const d   = await (await fetch(url)).json();
-    const w   = d.current_weather;
-    APP.wxCache[c.wxCity] = {
-      city: c.wxCity, temp_c: w.temperature.toFixed(1), dewp_c: null,
-      wind_spd_kt: Math.round(w.windspeed / 1.852),
-      wind_dir_deg: w.winddirection,
-      obs_time: new Date().toISOString(),
-    };
-    APP.updateWxBadge(key);
-    console.log('[Weather] Open-Meteo OK for', c.label);
-  } catch (e2) {
-    console.warn('[Weather] Open-Meteo also failed:', e2.message);
+    console.warn('[Weather] Node-RED /api/weather failed:', e.message);
+    // No fallback — data must come from our database
   }
 };
 
 APP.get24h = async function () {
-  if (APP.wx24hCache) return APP.wx24hCache;
   const r = await fetch(APP.WEATHER_24H);
   if (!r.ok) throw new Error('HTTP ' + r.status);
   const data = await r.json();
-  APP.wx24hCache = Array.isArray(data) ? data : [];
-  console.log('[Weather] 24h loaded:', APP.wx24hCache.length, 'rows');
-  return APP.wx24hCache;
+  const rows = Array.isArray(data) ? data : [];
+  console.log('[Weather] 24h loaded:', rows.length, 'rows');
+  return rows;
 };
 
 APP.updateWxBadge = function (key) {
@@ -70,21 +49,17 @@ APP.updateWxBadge = function (key) {
 
   // UTC observation time
   const utcTime = wx.obs_time
-    ? new Date(wx.obs_time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) + ' UTC'
+    ? new Date(wx.obs_time).toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', timeZone:'UTC' }) + ' UTC'
     : '--';
   document.getElementById('wx-obs').textContent = utcTime;
 
-  // Local city time (current time, not obs_time, to always be fresh)
+  // Local city time
   try {
-    const localTime = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: c.tz });
+    const localTime = new Date().toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', timeZone: c.tz });
     document.getElementById('wx-local').textContent = localTime + ' local';
-  } catch (e) {
+  } catch(e) {
     document.getElementById('wx-local').textContent = '';
   }
 
   document.getElementById('wx-badge').classList.add('show');
-
-  // Update map stats pill
-  const sbWx = document.getElementById('sb-wx');
-  if (sbWx) sbWx.textContent = temp.toFixed(1) + '\u00b0C';
 };

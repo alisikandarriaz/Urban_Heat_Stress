@@ -1,158 +1,171 @@
 /**
  * charts.js
- * Three charts: 24h temperature trend, LST comparison, UHI ranking.
- * 24h trend tries Node-RED first, falls back to Open-Meteo automatically.
+ * Chart 1: 24h temperature trend from Node-RED / PostgreSQL (no external fallback)
+ * Chart 2: LST + Population dual-axis
+ * Chart 3: Greenness index from GreenessData.xlsx
  */
-APP.charts = { trend: null, lst: null, uhi: null };
+
+APP.charts = { trend: null, lst: null, green: null };
 
 APP._cOpts = (x={}) => ({
   responsive:true, maintainAspectRatio:true,
   animation:{duration:300}, plugins:{legend:{display:false}}, ...x
 });
-
 APP._showTrendMsg   = html => {
-  document.getElementById('ch-trend').style.display = 'none';
-  document.getElementById('trend-msg').style.display = 'flex';
-  document.getElementById('trend-msg').innerHTML = html;
+  document.getElementById('ch-trend').style.display='none';
+  document.getElementById('trend-msg').style.display='flex';
+  document.getElementById('trend-msg').innerHTML=html;
 };
 APP._showTrendChart = () => {
-  document.getElementById('ch-trend').style.display = 'block';
-  document.getElementById('trend-msg').style.display = 'none';
+  document.getElementById('ch-trend').style.display='block';
+  document.getElementById('trend-msg').style.display='none';
 };
 
 APP.renderCharts = function (key) {
   document.getElementById('chart-city').textContent = APP.CITIES[key].label;
   APP.renderTrendChart(key);
   APP.renderLSTChart(key);
-  APP.renderUHIChart(key);
+  APP.renderGreenChart(key);
 };
 
-// ── 24h temperature trend ──────────────────────────────────────────────
-// Tries Node-RED endpoint first. Falls back to Open-Meteo if blocked/slow.
+// ── Chart 1: 24h temperature trend (Node-RED / PostgreSQL only) ───────────
 APP.renderTrendChart = async function (key) {
   const c = APP.CITIES[key];
   APP._showTrendMsg('Loading 24h data\u2026');
-
-  let rows = [];
-
-  // 1. Try Node-RED (our real METAR data)
   try {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 5000); // 5s timeout
-    const r = await fetch(APP.WEATHER_24H, { signal: ctrl.signal });
+    const ctrl  = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 10000); // 10s timeout
+    const r     = await fetch(APP.WEATHER_24H, { signal: ctrl.signal });
     clearTimeout(timer);
-    if (r.ok) {
-      const all = await r.json();
-      if (Array.isArray(all) && all.length > 0) {
-        rows = all
-          .filter(row => row.city === c.wxCity)
-          .sort((a, b) => new Date(a.obs_time) - new Date(b.obs_time));
-        if (rows.length > 0) console.log('[24h] Node-RED:', rows.length, 'rows for', c.wxCity);
-      }
-    }
-  } catch (e) {
-    console.warn('[24h] Node-RED unavailable (' + e.message + '), trying Open-Meteo');
-  }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const all = await r.json();
+    if (!Array.isArray(all) || all.length === 0) throw new Error('No data in database');
 
-  // 2. Fall back to Open-Meteo hourly temperature (free, no CORS issues)
-  if (rows.length === 0) {
-    try {
-      const url = 'https://api.open-meteo.com/v1/forecast?'
-        + 'latitude=' + c.center[0]
-        + '&longitude=' + c.center[1]
-        + '&hourly=temperature_2m&past_hours=24&forecast_hours=0&timezone=UTC';
-      const r2 = await fetch(url);
-      const d2 = await r2.json();
-      const times = d2.hourly?.time || [];
-      const temps = d2.hourly?.temperature_2m || [];
-      rows = times.map((t, i) => ({
-        city: c.wxCity,
-        obs_time: t + ':00+00',
-        temp_c: String(temps[i] ?? ''),
-      })).filter(row => row.temp_c !== '');
-      console.log('[24h] Open-Meteo fallback:', rows.length, 'hours for', c.label);
-    } catch (e2) {
-      APP._showTrendMsg('Error loading 24h data: ' + e2.message);
+    const rows = all
+      .filter(row => row.city === c.wxCity)
+      .sort((a,b) => new Date(a.obs_time) - new Date(b.obs_time));
+
+    if (rows.length === 0) {
+      const avail = [...new Set(all.map(x=>x.city))].join(', ');
+      APP._showTrendMsg(
+        'No data for <strong>' + c.label.split(',')[0] + '</strong>.<br>' +
+        '<small>Cities in DB: ' + (avail || 'none') + '</small>'
+      );
       return;
     }
-  }
 
-  if (rows.length === 0) {
-    APP._showTrendMsg('No 24h data available for ' + c.label.split(',')[0]);
-    return;
-  }
+    APP._showTrendChart();
 
-  // Render line chart
-  APP._showTrendChart();
-  const labels = rows.map(row => {
-    const d = new Date(row.obs_time);
-    return d.getUTCHours().toString().padStart(2,'0') + ':' + d.getUTCMinutes().toString().padStart(2,'0');
-  });
-  const temps = rows.map(row => parseFloat(row.temp_c));
+    // Parse timestamps safely — handles both Postgres "+00" and ISO formats
+    const labels = rows.map(row => {
+      const t = String(row.obs_time || '');
+      // Try direct substring first (fast, no Date parsing needed)
+      // Postgres: "2026-05-29 17:30:00+00"  -> index 11..16 = "17:30"
+      // ISO:      "2026-05-29T17:30:00Z"    -> index 11..16 = "17:30"
+      if (t.length >= 16) {
+        const hhmm = t.slice(11, 16).replace('T','').trim();
+        if (/^\d{2}:\d{2}$/.test(hhmm)) return hhmm;
+      }
+      const d = new Date(t);
+      if (!isNaN(d)) return d.getUTCHours().toString().padStart(2,'0') + ':' + d.getUTCMinutes().toString().padStart(2,'0');
+      return '--';
+    });
+    const temps = rows.map(row => parseFloat(row.temp_c));
 
-  if (APP.charts.trend) APP.charts.trend.destroy();
-  APP.charts.trend = new Chart(document.getElementById('ch-trend'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
+    if (APP.charts.trend) APP.charts.trend.destroy();
+    APP.charts.trend = new Chart(document.getElementById('ch-trend'), {
+      type: 'line',
+      data: { labels, datasets: [{
         data: temps,
-        borderColor: '#60A5FA',
-        backgroundColor: 'rgba(96,165,250,0.10)',
-        borderWidth: 2, pointRadius: 0, fill: true, tension: .4,
-      }],
-    },
-    options: APP._cOpts({
-      scales: {
-        x: { ticks: { font:{size:8}, maxTicksLimit:12, maxRotation:0 }, grid:{color:'var(--ch-grid)'} },
-        y: { ticks: { font:{size:9} }, grid:{color:'var(--ch-grid)'}, title:{display:true,text:'\u00b0C',font:{size:9}} },
-      },
-    }),
-  });
+        borderColor:'#60A5FA', backgroundColor:'rgba(96,165,250,0.10)',
+        borderWidth:2, pointRadius:0, fill:true, tension:.4,
+      }]},
+      options: APP._cOpts({
+        scales:{
+          x:{ ticks:{font:{size:8},maxTicksLimit:12,maxRotation:0}, grid:{color:'var(--ch-grid)'} },
+          y:{ ticks:{font:{size:9}}, grid:{color:'var(--ch-grid)'}, title:{display:true,text:'\u00b0C',font:{size:9}} },
+        },
+      }),
+    });
+  } catch (e) {
+    APP._showTrendMsg(
+      'Error loading 24h data: ' + e.message +
+      '<br><small>Check Node-RED CORS settings or re-import flow</small>'
+    );
+  }
 };
 
-// ── LST comparison ─────────────────────────────────────────────────────
+// ── Chart 2: LST + Population (dual Y-axis) ───────────────────────────────
 APP.renderLSTChart = function (key) {
   if (APP.charts.lst) APP.charts.lst.destroy();
+
+  const popVals = APP.CITY_KEYS.map(k => APP.CITIES[k].pop || null);
+
   APP.charts.lst = new Chart(document.getElementById('ch-lst'), {
-    type: 'bar',
     data: {
       labels: APP.CITY_LABELS,
-      datasets: [{
-        data: APP.CITY_KEYS.map(k => APP.CITIES[k].lst),
-        backgroundColor: APP.CITY_KEYS.map(k => k === key ? '#EF4444' : '#F97316'),
-        borderRadius: 3, borderSkipped: false,
-      }],
+      datasets: [
+        {
+          type: 'bar', label: 'LST \u00b0C',
+          data: APP.CITY_KEYS.map(k => APP.CITIES[k].lst),
+          backgroundColor: APP.CITY_KEYS.map(k => k === key ? '#EF4444' : '#F97316'),
+          borderRadius:3, borderSkipped:false, yAxisID:'y',
+        },
+        {
+          type: 'line', label: 'Population',
+          data: popVals,
+          borderColor:'#60A5FA', backgroundColor:'rgba(96,165,250,0.12)',
+          borderWidth:2, pointRadius:3, pointBackgroundColor:'#60A5FA',
+          tension:.3, fill:false, yAxisID:'y1', spanGaps:true,
+        },
+      ],
     },
     options: APP._cOpts({
-      scales: {
-        x: { ticks:{font:{size:8},maxRotation:45}, grid:{display:false} },
-        y: { ticks:{font:{size:9}}, grid:{color:'var(--ch-grid)'}, min:22, title:{display:true,text:'\u00b0C',font:{size:9}} },
+      plugins:{ legend:{ display:true, labels:{ font:{size:9}, color:'#73726c', boxWidth:12 } } },
+      scales:{
+        x:{ ticks:{font:{size:8},maxRotation:45}, grid:{display:false} },
+        y:{ ticks:{font:{size:9}}, grid:{color:'var(--ch-grid)'}, min:22,
+            title:{display:true,text:'LST \u00b0C',font:{size:9}} },
+        y1:{ position:'right', grid:{display:false},
+             ticks:{ font:{size:8},
+               callback: v => v>=1e6 ? (v/1e6).toFixed(1)+'M' : v>=1e3 ? (v/1e3).toFixed(0)+'K' : v },
+             title:{display:true,text:'Population',font:{size:9}} },
       },
     }),
   });
 };
 
-// ── UHI ranking ────────────────────────────────────────────────────────
-APP.renderUHIChart = function (key) {
-  const si = APP.CITY_KEYS.map((_,i) => i)
-    .sort((a,b) => APP.CITIES[APP.CITY_KEYS[b]].uhi - APP.CITIES[APP.CITY_KEYS[a]].uhi);
-  if (APP.charts.uhi) APP.charts.uhi.destroy();
-  APP.charts.uhi = new Chart(document.getElementById('ch-uhi'), {
-    type: 'bar',
-    data: {
-      labels: si.map(i => APP.CITY_LABELS[i]),
-      datasets: [{
-        data: si.map(i => APP.CITIES[APP.CITY_KEYS[i]].uhi),
-        backgroundColor: si.map(i => APP.CITY_KEYS[i] === key ? '#A78BFA' : '#4B3B7A'),
-        borderRadius: 3, borderSkipped: false,
+// ── Chart 3: Greenness index (replaces UHI ranking) ───────────────────────
+APP.renderGreenChart = function (key) {
+  if (APP.charts.green) APP.charts.green.destroy();
+
+  // Sort descending; null (no data) goes to bottom
+  const sorted = APP.CITY_KEYS
+    .map(k => ({ key:k, label:APP.CITIES[k].label.split(',')[0], val:APP.GREENNESS[k] }))
+    .sort((a,b) => (b.val ?? -1) - (a.val ?? -1));
+
+  APP.charts.green = new Chart(document.getElementById('ch-uhi'), {
+    type:'bar',
+    data:{
+      labels: sorted.map(d => d.label),
+      datasets:[{
+        data: sorted.map(d => d.val ?? 0),
+        backgroundColor: sorted.map(d =>
+          d.val === null  ? '#3a3a38'   :
+          d.key === key   ? '#4ADE80'   :
+          d.val >= 0.4    ? '#16A34A'   :
+          d.val >= 0.3    ? '#22C55E'   :
+          d.val >= 0.2    ? '#86EFAC'   : '#BEF264'
+        ),
+        borderRadius:3, borderSkipped:false,
       }],
     },
     options: APP._cOpts({
-      indexAxis: 'y',
-      scales: {
-        x: { ticks:{font:{size:9}}, grid:{color:'var(--ch-grid)'}, title:{display:true,text:'UHI index',font:{size:9}} },
-        y: { ticks:{font:{size:8}}, grid:{display:false} },
+      indexAxis:'y',
+      scales:{
+        x:{ ticks:{font:{size:9}}, grid:{color:'var(--ch-grid)'}, max:0.6,
+            title:{display:true,text:'Average Greenness Index',font:{size:9}} },
+        y:{ ticks:{font:{size:8}}, grid:{display:false} },
       },
     }),
   });
