@@ -51,7 +51,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .ui-body{flex:1;display:flex;min-height:0;overflow:hidden;}
 
 /* â”€â”€ Left panel â”€â”€ */
-.left-panel{width:230px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--bd);overflow-y:auto;padding:10px 10px 14px;}
+.left-panel{width:235px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--bd);overflow-y:auto;padding:10px 10px 14px;}
 .left-panel::-webkit-scrollbar{width:3px;}
 .left-panel::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px;}
 
@@ -223,10 +223,10 @@ html.light .grp-lbl{color:#5a5a58;}
   .a-inner{height:auto;display:block;padding:8px 12px;}
   .a-hdr{margin-bottom:6px;}
   .a-hdr h2{font-size:11px;}
-  .charts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;height:310px;page-break-inside:avoid;}
-  .chart-card{height:310px;overflow:visible;display:flex;flex-direction:column;border:1px solid #ccc;border-radius:6px;padding:8px;}
+  .charts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .chart-card{height:260px;overflow:visible;display:flex;flex-direction:column;border:1px solid #ccc;border-radius:6px;padding:8px;}
   .chart-card h3{font-size:9px;color:#555;margin-bottom:5px;}
-  .chart-card canvas{flex:1;min-height:0;}
+  .chart-card canvas{height:195px !important;max-height:195px !important;width:100% !important;}
   .no-data{flex:1;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;}
   .chart-ref,.chart-src{font-size:8px;color:#888;border-top-color:#ddd;}
   .ui-footer{page-break-inside:avoid;font-size:9px;}
