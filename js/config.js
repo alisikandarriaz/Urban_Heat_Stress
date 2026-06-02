@@ -9,9 +9,24 @@ APP.WFS = {
   cities:    'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:civis_cities&maxFeatures=50&outputFormat=application/json',
 };
 APP.WMS_CONFIG = {
+  // Real GeoServer heat analysis layers (2022 and 2025)
+  lst2022:   { url:'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms', layer:'ipsdi_st26:LST2022',   opts:{version:'1.1.0',transparent:true,format:'image/png',attribution:'\u00a9 Z_GIS'} },
+  lst2025:   { url:'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms', layer:'ipsdi_st26:LST2025',   opts:{version:'1.1.0',transparent:true,format:'image/png',attribution:'\u00a9 Z_GIS'} },
+  uhi2022:   { url:'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms', layer:'ipsdi_st26:UHI2022',   opts:{version:'1.1.0',transparent:true,format:'image/png',attribution:'\u00a9 Z_GIS'} },
+  uhi2025:   { url:'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms', layer:'ipsdi_st26:UHI2025',   opts:{version:'1.1.0',transparent:true,format:'image/png',attribution:'\u00a9 Z_GIS'} },
+  utfvi2022: { url:'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms', layer:'ipsdi_st26:UTFVI2022', opts:{version:'1.1.0',transparent:true,format:'image/png',attribution:'\u00a9 Z_GIS'} },
+  utfvi2025: { url:'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms', layer:'ipsdi_st26:UTFVI2025', opts:{version:'1.1.0',transparent:true,format:'image/png',attribution:'\u00a9 Z_GIS'} },
+  // Copernicus / EEA layers
   lu:    { url:'https://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/UA_UrbanAtlas_2018/MapServer/WMSServer', layer:'Land_Use_vector52160',  opts:{version:'1.3.0'} },
   trees: { url:'https://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/UA_StreetTreeLayer_2018/MapServer/WMSServer', layer:'STL_2018_Vector43148', opts:{version:'1.3.0',uppercase:true} },
   imp:   { url:'https://geoserver.geoville.com/geoserver/nvlcc/ows', layer:'HRL_NVLCC_IMD_10m', opts:{version:'1.3.0',crs:L.CRS.EPSG3857} },
+};
+
+// Which WMS ID to use per logical layer per year
+APP.YEAR_LAYERS = {
+  lst:   { '2022':'lst2022',   '2025':'lst2025'   },
+  uhi:   { '2022':'uhi2022',   '2025':'uhi2025'   },
+  utfvi: { '2022':'utfvi2022', '2025':'utfvi2025' },
 };
 
 APP.CITIES = {

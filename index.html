@@ -76,6 +76,10 @@
     <aside class="left-panel">
 
       <div class="grp-lbl" data-i18n="HEAT_ANALYSIS">HEAT ANALYSIS</div>
+      <div class="year-toggle">
+      <button class="yr-btn active" data-yr="2022" onclick="APP.setYear('2022')">2022</button>
+      <button class="yr-btn" data-yr="2025" onclick="APP.setYear('2025')">2025</button>
+      </div>
       <label class="layer-row"><input type="checkbox" id="cb-lst" onchange="APP.toggleL('lst',this.checked)"><span class="sw grad-lst"></span><span class="lyr-name" data-i18n="lst">LST (&deg;C)</span><button class="xml-btn" onclick="APP.dlXML('lst')"><i class="ti ti-download" style="font-size:10px"></i>XML</button></label>
       <label class="layer-row"><input type="checkbox" id="cb-uhi" onchange="APP.toggleL('uhi',this.checked)"><span class="sw grad-uhi"></span><span class="lyr-name" data-i18n="uhi">UHI index</span><button class="xml-btn" onclick="APP.dlXML('uhi')"><i class="ti ti-download" style="font-size:10px"></i>XML</button></label>
       <label class="layer-row grp-gap"><input type="checkbox" id="cb-utfvi" onchange="APP.toggleL('utfvi',this.checked)"><span class="sw grad-utfvi"></span><span class="lyr-name" data-i18n="utfvi">UTFVI class</span><button class="xml-btn" onclick="APP.dlXML('utfvi')"><i class="ti ti-download" style="font-size:10px"></i>XML</button></label>
