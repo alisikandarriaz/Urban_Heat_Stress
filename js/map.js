@@ -136,7 +136,22 @@ APP.setCity = async function (key) {
   APP.map.flyTo(c.center,c.zoom,{duration:1.3});
 
   // Build biodiversity placeholder layers (LST/UHI/UTFVI now come from real WMS)
-  APP._buildBioLayers(c.center);
+ APP._buildBioLayers = function (ct) {
+  const [la, lo] = ct;
+
+  // Natura 2000 — placeholder outline only (no filled rectangles)
+  const b = { n2k: [[la-.15,lo-.25],[la+.15,lo+.25]] };
+  APP.LG.n2k = L.rectangle(b.n2k, {color:'#16A34A', weight:1.5, fill:false, dashArray:'6 4'});
+
+  // Species density and green spaces — empty layer groups until real data arrives
+  APP.LG.gbif  = L.layerGroup([]);
+  APP.LG.green = L.layerGroup([]);
+
+  const skip = new Set(['lu','trees','imp','nuts','study','lst','uhi','utfvi']);
+  Object.keys(APP.LG).forEach(k => {
+    if (!skip.has(k) && APP.LV[k]) APP.LG[k].addTo(APP.map);
+  });
+};
 
   APP.showLoad('Loading\u2026');
   if (!APP.wfsDone) await new Promise(r=>{const t=setInterval(()=>{if(APP.wfsDone){clearInterval(t);r();}},150);});

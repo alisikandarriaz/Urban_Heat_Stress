@@ -45,6 +45,13 @@
     </div>
 
     <div class="hdr-right">
+
+     <button class="hdr-btn" onclick="APP.showAbout()" title="About this SDI">
+   <i class="ti ti-info-circle"></i>
+   <span class="btn-lbl">About</span>
+   </button>
+    <div class="hdr-sep"></div>
+
       <button class="hdr-btn" id="analytics-btn" onclick="APP.toggleAnalytics()">
         <i class="ti ti-chart-bar"></i>
         <span class="btn-lbl" data-i18n="analytics">Analytics</span>
@@ -76,10 +83,13 @@
     <aside class="left-panel">
 
       <div class="grp-lbl" data-i18n="HEAT_ANALYSIS">HEAT ANALYSIS</div>
-      <div class="year-toggle">
-      <button class="yr-btn active" data-yr="2022" onclick="APP.setYear('2022')">2022</button>
-      <button class="yr-btn" data-yr="2025" onclick="APP.setYear('2025')">2025</button>
-      </div>
+<div class="year-toggle">
+  <span class="yr-label">Year</span>
+  <div class="yr-seg">
+    <button class="yr-btn active" data-yr="2022" onclick="APP.setYear('2022')">2022</button>
+    <button class="yr-btn" data-yr="2025" onclick="APP.setYear('2025')">2025</button>
+  </div>
+</div>
       <label class="layer-row"><input type="checkbox" id="cb-lst" onchange="APP.toggleL('lst',this.checked)"><span class="sw grad-lst"></span><span class="lyr-name" data-i18n="lst">LST (&deg;C)</span><button class="xml-btn" onclick="APP.dlXML('lst')"><i class="ti ti-download" style="font-size:10px"></i>XML</button></label>
       <label class="layer-row"><input type="checkbox" id="cb-uhi" onchange="APP.toggleL('uhi',this.checked)"><span class="sw grad-uhi"></span><span class="lyr-name" data-i18n="uhi">UHI index</span><button class="xml-btn" onclick="APP.dlXML('uhi')"><i class="ti ti-download" style="font-size:10px"></i>XML</button></label>
       <label class="layer-row grp-gap"><input type="checkbox" id="cb-utfvi" onchange="APP.toggleL('utfvi',this.checked)"><span class="sw grad-utfvi"></span><span class="lyr-name" data-i18n="utfvi">UTFVI class</span><button class="xml-btn" onclick="APP.dlXML('utfvi')"><i class="ti ti-download" style="font-size:10px"></i>XML</button></label>
@@ -277,5 +287,88 @@
 <script src="js/weather.js"></script>
 <script src="js/charts.js"></script>
 <script src="js/app.js"></script>
+
+<!-- ── About / Info Modal ── -->
+<div class="modal-overlay hidden" id="about-modal">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <div style="display:flex;align-items:center;gap:10px">
+        <img src="assets/logo.png" style="height:32px">
+        <h2 class="modal-title">HotEurope — Urban Heat Stress SDI</h2>
+      </div>
+      <button class="modal-close" onclick="APP.closeAbout()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" data-tab="about" onclick="APP.switchTab('about')">About</button>
+      <button class="mtab" data-tab="data" onclick="APP.switchTab('data')">Data Sources</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- About tab -->
+      <div class="tab-panel active" id="tab-about">
+        <div class="modal-section">
+          <div class="meta-row"><span class="meta-lbl">Version</span><span class="meta-val">1.0</span></div>
+          <div class="meta-row"><span class="meta-lbl">Updated</span><span class="meta-val">June 2026</span></div>
+          <div class="meta-row"><span class="meta-lbl">Course</span><span class="meta-val">Spatial Data Infrastructures, M.Sc. Applied Geoinformatics</span></div>
+          <div class="meta-row"><span class="meta-lbl">Institution</span><span class="meta-val">Paris-Lodron University Salzburg — Z_GIS</span></div>
+          <div class="meta-row"><span class="meta-lbl">Supervisor</span><span class="meta-val">Prof. Thomas Blaschke</span></div>
+        </div>
+        <div class="modal-section">
+          <h3 class="modal-sh">Team</h3>
+          <div class="team-grid">
+            <div class="team-card"><i class="ti ti-code" style="color:var(--acc)"></i><strong>Sikandar Ali</strong><span>Technical Lead &amp; Geospatial Dev</span><small>s1119720</small></div>
+            <div class="team-card"><i class="ti ti-temperature" style="color:#F97316"></i><strong>Laetitia Adam</strong><span>Heat Analysis &amp; Remote Sensing</span></div>
+            <div class="team-card"><i class="ti ti-leaf" style="color:#22C55E"></i><strong>Emmanuel Udeonwo</strong><span>Biodiversity &amp; Ecology</span></div>
+          </div>
+        </div>
+        <div class="modal-section">
+          <h3 class="modal-sh">Description</h3>
+          <p class="modal-text">HotEurope is a Spatial Data Infrastructure for urban heat stress monitoring across 11 CIVIS alliance cities. It integrates Landsat 8 derived Land Surface Temperature, Urban Heat Island indices and vegetation data to support urban planners in identifying heat vulnerable areas.</p>
+          <p class="modal-text" style="margin-top:8px">LST and UHI rasters are calculated from Landsat 8 Band 10 data averaged over summer months (May–September) at 100m resolution. Weather data is sourced from METAR airport stations updated every 30 minutes via the university PostgreSQL database.</p>
+        </div>
+        <div class="modal-section">
+          <button class="ob-btn ob-next" style="width:100%;justify-content:center" onclick="APP.closeAbout();APP.restartOnboarding()">
+            <i class="ti ti-player-play"></i> Replay tutorial
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Sources tab -->
+      <div class="tab-panel" id="tab-data">
+        <div class="modal-section">
+          <h3 class="modal-sh">Heat Analysis</h3>
+          <div class="src-row"><span class="src-name">Landsat 8 LST &amp; UHI (2022, 2025)</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms" target="_blank" rel="noopener">GeoServer WMS</a></div>
+          <div class="src-row"><span class="src-name">UTFVI 2022 &amp; 2025</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms" target="_blank" rel="noopener">GeoServer WMS</a></div>
+        </div>
+        <div class="modal-section">
+          <h3 class="modal-sh">Boundaries</h3>
+          <div class="src-row"><span class="src-name">NUTS3 Boundaries</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:civis_nuts&outputFormat=application/json" target="_blank" rel="noopener">GeoServer WFS</a></div>
+          <div class="src-row"><span class="src-name">Study Areas</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:study_area&outputFormat=application/json" target="_blank" rel="noopener">GeoServer WFS</a></div>
+          <div class="src-row"><span class="src-name">City Centroids</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:civis_cities&outputFormat=application/json" target="_blank" rel="noopener">GeoServer WFS</a></div>
+        </div>
+        <div class="modal-section">
+          <h3 class="modal-sh">Land Use &amp; Vegetation</h3>
+          <div class="src-row"><span class="src-name">Urban Atlas Land Use 2018</span><a href="https://www.eea.europa.eu/data-and-maps/data/urban-atlas" target="_blank" rel="noopener">Copernicus EEA</a></div>
+          <div class="src-row"><span class="src-name">Street Trees 2018</span><a href="https://www.eea.europa.eu/data-and-maps/data/urban-atlas" target="_blank" rel="noopener">Copernicus EEA</a></div>
+          <div class="src-row"><span class="src-name">Imperviousness Density 2021</span><a href="https://land.copernicus.eu/pan-european/high-resolution-layers/imperviousness" target="_blank" rel="noopener">Copernicus HRL</a></div>
+        </div>
+        <div class="modal-section">
+          <h3 class="modal-sh">Biodiversity</h3>
+          <div class="src-row"><span class="src-name">Natura 2000 Protected Areas</span><a href="https://www.eea.europa.eu/data-and-maps/data/natura-14" target="_blank" rel="noopener">EEA</a></div>
+          <div class="src-row"><span class="src-name">Species Occurrences</span><a href="https://www.gbif.org" target="_blank" rel="noopener">GBIF</a></div>
+        </div>
+        <div class="modal-section">
+          <h3 class="modal-sh">Statistics &amp; Weather</h3>
+          <div class="src-row"><span class="src-name">Live METAR Weather</span><a href="https://www.aviationweather.gov" target="_blank" rel="noopener">Aviation Weather Center</a></div>
+          <div class="src-row"><span class="src-name">City Population</span><a href="https://ec.europa.eu/eurostat" target="_blank" rel="noopener">Eurostat</a></div>
+          <div class="src-row"><span class="src-name">Greenness Index</span><a href="https://green-city-index.org/en/map/" target="_blank" rel="noopener">Green City Index 2025</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 </body>
 </html>

@@ -149,4 +149,22 @@ APP.closeOnboarding = function () {
   localStorage.setItem('hoteurope_onboarded','1');
 };
 
+APP.showAbout = function () {
+  document.getElementById('about-modal').classList.remove('hidden');
+  APP.switchTab('about');
+};
+APP.closeAbout = function () {
+  document.getElementById('about-modal').classList.add('hidden');
+};
+APP.switchTab = function (tab) {
+  document.querySelectorAll('.mtab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+};
+APP.restartOnboarding = function () {
+  localStorage.removeItem('hoteurope_onboarded');
+  APP.obStep = 1;
+  document.getElementById('ob-overlay').classList.remove('hidden');
+  APP.initOnboarding();
+};
+
 document.addEventListener('DOMContentLoaded', APP.init);

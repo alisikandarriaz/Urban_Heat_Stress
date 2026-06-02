@@ -235,4 +235,60 @@ html.light .grp-lbl{color:#5a5a58;}
   .chart-ref,.chart-src{font-size:8px;color:#888;border-top-color:#ddd;}
   .ui-footer{page-break-inside:avoid;font-size:9px;}
   .leg-src{display:none;}
+
+  /* ── Year toggle redesign ── */
+.year-toggle{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:2px 4px;}
+.yr-label{font-size:10px;color:var(--txm);font-weight:500;flex-shrink:0;}
+.yr-seg{display:flex;background:var(--bg);border:1px solid var(--bd2);border-radius:6px;overflow:hidden;}
+.yr-btn{flex:1;padding:4px 10px;font-size:11px;border:none;background:transparent;color:var(--tx3);cursor:pointer;font-family:inherit;font-weight:500;transition:background .12s,color .12s;}
+.yr-btn:hover{background:var(--bd);color:var(--tx);}
+.yr-btn.active{background:var(--acc);color:#fff;}
+
+/* ── XML/Meta button update ── */
+.xml-btn{flex-shrink:0;border:1px solid var(--bd2);border-radius:4px;background:var(--bg3);color:#a8a5a0;cursor:pointer;padding:2px 6px;font-size:9px;font-family:inherit;font-weight:500;display:inline-flex;align-items:center;gap:2px;transition:background .1s,color .1s,border-color .1s;position:relative;}
+.xml-btn i{font-size:10px !important;}
+.xml-btn:hover{background:var(--acc2);color:var(--acc);border-color:var(--acc);}
+.xml-btn::after{content:'Downloads ISO 19115 XML metadata for this layer';position:absolute;bottom:calc(100% + 5px);right:0;background:#1a1a18;color:#f0ede8;font-size:10px;font-family:-apple-system,sans-serif;white-space:nowrap;padding:4px 8px;border-radius:5px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:999;}
+.xml-btn:hover::after{opacity:1;}
+
+/* ── About / Info Modal ── */
+.modal-overlay{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.hidden{display:none;}
+.modal-card{background:var(--bg2);border:1px solid var(--bd2);border-radius:14px;width:640px;max-width:95vw;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.5);}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--bd);flex-shrink:0;}
+.modal-title{font-size:15px;font-weight:700;color:var(--tx);}
+.modal-close{border:none;background:none;cursor:pointer;color:var(--txm);font-size:18px;line-height:1;padding:4px;}
+.modal-close:hover{color:var(--tx);}
+.modal-tabs{display:flex;gap:0;border-bottom:1px solid var(--bd);flex-shrink:0;}
+.mtab{flex:1;padding:10px;font-size:12px;border:none;background:transparent;color:var(--txm);cursor:pointer;font-family:inherit;font-weight:500;border-bottom:2px solid transparent;transition:all .12s;}
+.mtab:hover{color:var(--tx);}
+.mtab.active{color:var(--acc);border-bottom-color:var(--acc);}
+.modal-body{overflow-y:auto;padding:0;flex:1;}
+.modal-body::-webkit-scrollbar{width:4px;}
+.modal-body::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px;}
+.tab-panel{display:none;padding:16px 20px;}
+.tab-panel.active{display:block;}
+.modal-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--bd);}
+.modal-section:last-child{border-bottom:none;margin-bottom:0;}
+.modal-sh{font-size:11px;font-weight:700;color:var(--txm);letter-spacing:.06em;margin-bottom:10px;}
+.modal-text{font-size:12px;color:var(--tx3);line-height:1.7;}
+.meta-row{display:flex;gap:12px;margin-bottom:6px;font-size:12px;}
+.meta-lbl{color:var(--txm);width:90px;flex-shrink:0;}
+.meta-val{color:var(--tx2);}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.team-card{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:4px;}
+.team-card i{font-size:20px;margin-bottom:4px;}
+.team-card strong{font-size:12px;color:var(--tx);}
+.team-card span{font-size:11px;color:var(--tx3);}
+.team-card small{font-size:10px;color:var(--txm);}
+.src-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd);font-size:12px;}
+.src-row:last-child{border-bottom:none;}
+.src-name{color:var(--tx3);}
+.src-row a{color:var(--acc);text-decoration:none;font-size:11px;border:1px solid var(--acc);padding:2px 8px;border-radius:4px;}
+.src-row a:hover{background:var(--acc2);}
+
+@media(max-width:768px){
+  .team-grid{grid-template-columns:1fr;}
+  .modal-card{max-height:90vh;}
+}
 }
