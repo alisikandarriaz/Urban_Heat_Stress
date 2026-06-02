@@ -15,31 +15,25 @@ APP.initMap = function () {
   };
   APP.TILES.carto.addTo(APP.map);
   document.querySelector('.bm-btn[data-bm="carto"]').classList.add('active');
-
-  // Initialise all WMS layers
   APP.WMS = {};
   Object.entries(APP.WMS_CONFIG).forEach(([id,cfg]) => {
-    APP.WMS[id] = L.tileLayer.wms(cfg.url, {
-      layers:cfg.layer, format:cfg.opts.format||'image/png',
-      transparent:true, ...cfg.opts,
-    });
+    APP.WMS[id] = L.tileLayer.wms(cfg.url, { layers:cfg.layer, format:cfg.opts.format||'image/png', transparent:true, ...cfg.opts });
   });
-
   APP.map.on('click', APP._onMapClick);
   APP._loadAllWFS();
 };
 
 APP._loadAllWFS = async function () {
   try {
-    const [sa, nuts, cities] = await Promise.all([
+    const [sa,nuts,cities] = await Promise.all([
       fetch(APP.WFS.studyArea).then(r=>r.json()),
       fetch(APP.WFS.nuts).then(r=>r.json()),
       fetch(APP.WFS.cities).then(r=>r.json()),
     ]);
     APP.wfsCache.studyArea=sa; APP.wfsCache.nuts=nuts; APP.wfsCache.cities=cities;
     APP.wfsDone=true;
-    console.log('[WFS] study_area props:', sa.features?.[0]?.properties);
-    console.log('[WFS] civis_nuts props:', nuts.features?.[0]?.properties);
+    console.log('[WFS] study_area props:',  sa.features?.[0]?.properties);
+    console.log('[WFS] civis_nuts props:',  nuts.features?.[0]?.properties);
     console.log('[WFS] civis_cities props:', cities.features?.[0]?.properties);
     console.log('[WFS] civis_cities geom type:', cities.features?.[0]?.geometry?.type);
     APP._applyCityCenters(cities);
@@ -82,43 +76,26 @@ APP._findByNuts = function (col,nuts3) {
 
 APP.toggleL = function (id, on) {
   APP.LV[id]=on;
-
-  // Heat analysis — real GeoServer WMS (year-dependent)
   if (APP.YEAR_LAYERS[id]) {
     if (on) {
       const wmsId=APP.YEAR_LAYERS[id][APP.curYear];
       if (!APP.map.hasLayer(APP.WMS[wmsId])) APP.WMS[wmsId].addTo(APP.map);
     } else {
-      Object.values(APP.YEAR_LAYERS[id]).forEach(yid=>{
-        if (APP.map.hasLayer(APP.WMS[yid])) APP.map.removeLayer(APP.WMS[yid]);
-      });
+      Object.values(APP.YEAR_LAYERS[id]).forEach(yid=>{ if(APP.map.hasLayer(APP.WMS[yid])) APP.map.removeLayer(APP.WMS[yid]); });
     }
     return;
   }
-
-  // Other WMS layers
-  if (['lu','trees','imp'].includes(id)) {
-    on ? APP.WMS[id].addTo(APP.map) : APP.map.removeLayer(APP.WMS[id]);
-    return;
-  }
-
-  // Vector placeholder layers (biodiversity)
+  if (['lu','trees','imp'].includes(id)) { on?APP.WMS[id].addTo(APP.map):APP.map.removeLayer(APP.WMS[id]); return; }
   if (!APP.LG[id]) return;
-  on ? APP.LG[id].addTo(APP.map) : APP.map.removeLayer(APP.LG[id]);
+  on?APP.LG[id].addTo(APP.map):APP.map.removeLayer(APP.LG[id]);
 };
 
 APP.setYear = function (year) {
   APP.curYear=year;
   document.querySelectorAll('.yr-btn').forEach(b=>b.classList.toggle('active',b.dataset.yr===year));
-
-  // Switch active heat layers to new year
-  Object.keys(APP.YEAR_LAYERS).forEach(id => {
+  Object.keys(APP.YEAR_LAYERS).forEach(id=>{
     if (!APP.LV[id]) return;
-    // Remove old year
-    Object.values(APP.YEAR_LAYERS[id]).forEach(yid=>{
-      if (APP.map.hasLayer(APP.WMS[yid])) APP.map.removeLayer(APP.WMS[yid]);
-    });
-    // Add new year
+    Object.values(APP.YEAR_LAYERS[id]).forEach(yid=>{ if(APP.map.hasLayer(APP.WMS[yid])) APP.map.removeLayer(APP.WMS[yid]); });
     APP.WMS[APP.YEAR_LAYERS[id][year]].addTo(APP.map);
   });
 };
@@ -134,46 +111,22 @@ APP.setCity = async function (key) {
   APP.curKey=key; const c=APP.CITIES[key];
   APP._clearCityLayers(); APP.closeInfo();
   APP.map.flyTo(c.center,c.zoom,{duration:1.3});
-
-  // Build biodiversity placeholder layers (LST/UHI/UTFVI now come from real WMS)
- APP._buildBioLayers = function (ct) {
-  const [la, lo] = ct;
-
-  // Natura 2000 — placeholder outline only (no filled rectangles)
-  const b = { n2k: [[la-.15,lo-.25],[la+.15,lo+.25]] };
-  APP.LG.n2k = L.rectangle(b.n2k, {color:'#16A34A', weight:1.5, fill:false, dashArray:'6 4'});
-
-  // Species density and green spaces — empty layer groups until real data arrives
-  APP.LG.gbif  = L.layerGroup([]);
-  APP.LG.green = L.layerGroup([]);
-
-  const skip = new Set(['lu','trees','imp','nuts','study','lst','uhi','utfvi']);
-  Object.keys(APP.LG).forEach(k => {
-    if (!skip.has(k) && APP.LV[k]) APP.LG[k].addTo(APP.map);
-  });
-};
-
+  APP._buildBioLayers(c.center);
   APP.showLoad('Loading\u2026');
   if (!APP.wfsDone) await new Promise(r=>{const t=setInterval(()=>{if(APP.wfsDone){clearInterval(t);r();}},150);});
   APP._addReferenceLayers(key,c);
   APP.hideLoad();
-
-  // Add active heat analysis WMS for current year
   Object.keys(APP.YEAR_LAYERS).forEach(id=>{
     if (APP.LV[id]) {
       const wmsId=APP.YEAR_LAYERS[id][APP.curYear];
       if (!APP.map.hasLayer(APP.WMS[wmsId])) APP.WMS[wmsId].addTo(APP.map);
     }
   });
-
-  // Other WMS layers
   ['lu','trees','imp'].forEach(id=>{
     if (APP.LV[id]&&!APP.map.hasLayer(APP.WMS[id])) APP.WMS[id].addTo(APP.map);
     if (!APP.LV[id]&&APP.map.hasLayer(APP.WMS[id])) APP.map.removeLayer(APP.WMS[id]);
   });
-
-  // Stats pills
-  const bar=document.getElementById('stats-bar'); if(bar)bar.className='stats-bar show';
+  const bar=document.getElementById('stats-bar'); if(bar) bar.className='stats-bar show';
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   set('sb-lst',c.lst+'\u00b0C'); set('sb-uhi','+'+c.uhi); set('sb-green',c.green+'%');
   APP.loadWeather();
@@ -193,23 +146,16 @@ APP._addReferenceLayers = function (key,c) {
   if (APP.LV.study) APP.LG.study.addTo(APP.map);
 };
 
-// Biodiversity still placeholder — real layers pending
 APP._buildBioLayers = function (ct) {
   const [la,lo]=ct;
-  const b={
-    n2k:[[la-.15,lo-.25],[la+.15,lo+.25]],
-    gbif:[[la+.055,lo-.09],[la-.075,lo+.11],[la+.085,lo+.07],[la-.04,lo-.13]],
-    green:[[la+.04,lo-.07],[la-.05,lo+.09],[la+.01,lo+.13]],
-  };
-  APP.LG.n2k   = L.rectangle(b.n2k,{color:'#16A34A',weight:1.5,fill:false,dashArray:'6 4'});
-  APP.LG.gbif  = L.layerGroup(b.gbif.map((p,i)=>L.circle(p,{radius:[700,550,620,480][i],color:'none',fillColor:'#86EFAC',fillOpacity:.48})));
-  APP.LG.green = L.layerGroup(b.green.map((p,i)=>{const d=[.012,.015,.009][i];return L.rectangle([[p[0]-d,p[1]-d*1.5],[p[0]+d,p[1]+d*1.5]],{color:'#16A34A',weight:.5,fillColor:'#4ADE80',fillOpacity:.36});}));
+  APP.LG.n2k   = L.rectangle([[la-.15,lo-.25],[la+.15,lo+.25]],{color:'#16A34A',weight:1.5,fill:false,dashArray:'6 4'});
+  APP.LG.gbif  = L.layerGroup([]);
+  APP.LG.green = L.layerGroup([]);
   const skip=new Set(['lu','trees','imp','nuts','study','lst','uhi','utfvi']);
   Object.keys(APP.LG).forEach(k=>{if(!skip.has(k)&&APP.LV[k])APP.LG[k].addTo(APP.map);});
 };
 
 APP._clearCityLayers = function () {
-  // Only clear vector layers — WMS layers (heat analysis) stay persistent
   const skip=new Set(['lu','trees','imp','lst2022','lst2025','uhi2022','uhi2025','utfvi2022','utfvi2025']);
   Object.entries(APP.LG).forEach(([k,l])=>{if(!skip.has(k)&&l){APP.map.removeLayer(l);delete APP.LG[k];}});
   APP.curFeat=null;
