@@ -25,14 +25,74 @@ APP.initMap = function () {
 
 APP._loadAllWFS = async function () {
   try {
-    const [sa,nuts]=await Promise.all([
-      fetch(APP.WFS.studyArea).then(r=>r.json()),
-      fetch(APP.WFS.nuts).then(r=>r.json()),
+    const [sa, nuts, cities] = await Promise.all([
+      fetch(APP.WFS.studyArea).then(r => r.json()),
+      fetch(APP.WFS.nuts).then(r => r.json()),
+      fetch(APP.WFS.cities).then(r => r.json()),
     ]);
-    APP.wfsCache.studyArea=sa; APP.wfsCache.nuts=nuts; APP.wfsDone=true;
-    console.log('[WFS] study_area:',sa.features?.length,'nuts:',nuts.features?.length);
-    if(APP.curKey){['nuts','study'].forEach(k=>{if(APP.LG[k]){APP.map.removeLayer(APP.LG[k]);delete APP.LG[k];}});APP._addReferenceLayers(APP.curKey,APP.CITIES[APP.curKey]);}
-  } catch(e){APP.wfsDone=true;console.warn('[WFS] Failed:',e.message);}
+    APP.wfsCache.studyArea = sa;
+    APP.wfsCache.nuts      = nuts;
+    APP.wfsCache.cities    = cities;
+    APP.wfsDone = true;
+
+    // Log so we can see real property names — check browser console
+    console.log('[WFS] study_area props:',  sa.features?.[0]?.properties);
+    console.log('[WFS] civis_nuts props:',  nuts.features?.[0]?.properties);
+    console.log('[WFS] civis_cities props:', cities.features?.[0]?.properties);
+    console.log('[WFS] civis_cities geom type:', cities.features?.[0]?.geometry?.type);
+
+    // Update city centres from real GeoServer coordinates
+    APP._applyCityCenters(cities);
+
+    if (APP.curKey) {
+      ['nuts','study'].forEach(k => {
+        if (APP.LG[k]) { APP.map.removeLayer(APP.LG[k]); delete APP.LG[k]; }
+      });
+      APP._addReferenceLayers(APP.curKey, APP.CITIES[APP.curKey]);
+    }
+  } catch(e) {
+    APP.wfsDone = true;
+    console.warn('[WFS] Failed:', e.message);
+  }
+};
+
+APP._applyCityCenters = function (citiesGeoJSON) {
+  if (!citiesGeoJSON?.features?.length) {
+    console.warn('[WFS] civis_cities returned no features');
+    return;
+  }
+  let updated = 0;
+  citiesGeoJSON.features.forEach(f => {
+    const props = f.properties || {};
+    const geom  = f.geometry;
+
+    // Try common NUTS3 property names — log will tell us the real one
+    const nuts3 = props.NUTS_ID || props.nuts_id || props.nuts3
+               || props.NUTS3   || props.nuts_code || props.id;
+
+    if (!nuts3 || !geom) return;
+
+    const key = APP.CITY_KEYS.find(k =>
+      APP.CITIES[k].nuts3.toUpperCase() === String(nuts3).toUpperCase()
+    );
+    if (!key) return;
+
+    // Get coordinates from geometry
+    let lat, lng;
+    if (geom.type === 'Point') {
+      [lng, lat] = geom.coordinates;
+    } else if (geom.type === 'MultiPoint') {
+      [lng, lat] = geom.coordinates[0];
+    }
+    // For Polygon/MultiPolygon we keep hardcoded centre — too complex to centroid here
+
+    if (lat != null && lng != null && !isNaN(lat) && !isNaN(lng)) {
+      APP.CITIES[key].center = [lat, lng];
+      updated++;
+      console.log('[WFS] City centre updated from GeoServer:', key, lat, lng);
+    }
+  });
+  console.log('[WFS] Updated', updated, 'of', APP.CITY_KEYS.length, 'city centres from GeoServer');
 };
 
 APP._findByNuts = function (col,nuts3) {

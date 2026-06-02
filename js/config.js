@@ -4,8 +4,9 @@ APP.WEATHER_API = 'https://zgis185.geo.sbg.ac.at/group04/api/weather';
 APP.WEATHER_24H = 'https://zgis185.geo.sbg.ac.at/group04/api/weather/24h';
 
 APP.WFS = {
-  studyArea: 'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:study_area&outputFormat=application/json',
-  nuts:      'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:civis_nuts&outputFormat=application/json',
+  studyArea: 'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:study_area&maxFeatures=50&outputFormat=application/json',
+  nuts:      'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:civis_nuts&maxFeatures=50&outputFormat=application/json',
+  cities:    'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:civis_cities&maxFeatures=50&outputFormat=application/json',
 };
 APP.WMS_CONFIG = {
   lu:    { url:'https://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/UA_UrbanAtlas_2018/MapServer/WMSServer', layer:'Land_Use_vector52160',  opts:{version:'1.3.0'} },
