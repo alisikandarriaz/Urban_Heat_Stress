@@ -1,0 +1,2 @@
+/proxy/weather https://zgis185.geo.sbg.ac.at/group04/api/weather 200
+/proxy/weather/24h https://zgis185.geo.sbg.ac.at/group04/api/weather/24h 200
