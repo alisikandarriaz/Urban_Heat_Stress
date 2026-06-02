@@ -61,38 +61,43 @@ APP._applyCityCenters = function (citiesGeoJSON) {
     console.warn('[WFS] civis_cities returned no features');
     return;
   }
+
+  // Map GeoServer names (German/French) to our config keys
+  const NAME_MAP = {
+    'Marseille':  'marseille',
+    'Athen':      'athens',
+    'Bukarest':   'bucharest',
+    'Bruxelles':  'brussels',
+    'Glasgow':    'glasgow',
+    'Lausanne':   'lausanne',
+    'Madrid':     'madrid',
+    'Rom':        'rome',
+    'Salzburg':   'salzburg',
+    'Stockholm':  'stockholm',
+    'T\u00fcbingen': 'tuebingen',
+  };
+
   let updated = 0;
   citiesGeoJSON.features.forEach(f => {
-    const props = f.properties || {};
-    const geom  = f.geometry;
+    const name = f.properties?.name;
+    const geom = f.geometry;
+    const key  = NAME_MAP[name];
 
-    // Try common NUTS3 property names — log will tell us the real one
-    const nuts3 = props.NUTS_ID || props.nuts_id || props.nuts3
-               || props.NUTS3   || props.nuts_code || props.id;
+    if (!key || !geom) return; // skip extra cities like Casablanca, Dakar etc.
 
-    if (!nuts3 || !geom) return;
-
-    const key = APP.CITY_KEYS.find(k =>
-      APP.CITIES[k].nuts3.toUpperCase() === String(nuts3).toUpperCase()
-    );
-    if (!key) return;
-
-    // Get coordinates from geometry
     let lat, lng;
     if (geom.type === 'Point') {
       [lng, lat] = geom.coordinates;
-    } else if (geom.type === 'MultiPoint') {
-      [lng, lat] = geom.coordinates[0];
     }
-    // For Polygon/MultiPolygon we keep hardcoded centre — too complex to centroid here
 
     if (lat != null && lng != null && !isNaN(lat) && !isNaN(lng)) {
       APP.CITIES[key].center = [lat, lng];
       updated++;
-      console.log('[WFS] City centre updated from GeoServer:', key, lat, lng);
+      console.log('[WFS] City centre from GeoServer:', key, lat, lng);
     }
   });
-  console.log('[WFS] Updated', updated, 'of', APP.CITY_KEYS.length, 'city centres from GeoServer');
+
+  console.log('[WFS] Updated', updated, 'of 11 city centres from GeoServer');
 };
 
 APP._findByNuts = function (col,nuts3) {
