@@ -20,7 +20,7 @@ APP.renderCharts = function (key) {
 
 APP.renderTrendChart = async function (key) {
   const c = APP.CITIES[key];
-  APP._showTrendMsg('Loading\u2026');
+  APP._showTrendMsg('Loading…');
   let rows = [];
   const data = await APP.get24h();
   if (data) {
@@ -43,7 +43,7 @@ APP.renderTrendChart = async function (key) {
   APP.charts.trend = new Chart(document.getElementById('ch-trend'), {
     type:'line',
     data:{ labels, datasets:[{ data:temps, borderColor:'#60A5FA', backgroundColor:'rgba(96,165,250,0.10)', borderWidth:2, pointRadius:0, fill:true, tension:.4 }] },
-    options:APP._cOpts({ scales:{ x:{ticks:{font:{size:8},maxTicksLimit:12,maxRotation:0},grid:{color:'var(--ch-grid)'}}, y:{ticks:{font:{size:9}},grid:{color:'var(--ch-grid)'},title:{display:true,text:'\u00b0C',font:{size:9}}} } }),
+    options:APP._cOpts({ scales:{ x:{ticks:{font:{size:8},maxTicksLimit:12,maxRotation:0},grid:{color:'var(--ch-grid)'}}, y:{ticks:{font:{size:9}},grid:{color:'var(--ch-grid)'},title:{display:true,text:'°C',font:{size:9}}} } }),
   });
 };
 

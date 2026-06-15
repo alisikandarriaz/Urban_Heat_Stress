@@ -61,7 +61,7 @@ APP.updateWxBadge = function (key) {
   else if (wind > 20){ icon = 'ti-wind';      color = '#818CF8'; }
   document.getElementById('wx-icon').className   = 'ti ' + icon;
   document.getElementById('wx-icon').style.color = color;
-  document.getElementById('wx-temp').textContent = temp.toFixed(1) + '\u00b0C';
+  document.getElementById('wx-temp').textContent = temp.toFixed(1) + '°C';
   document.getElementById('wx-wind').textContent = wind + ' kt';
   const utcTime = wx.obs_time ? new Date(wx.obs_time).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'UTC'}) + ' UTC' : '--';
   document.getElementById('wx-obs').textContent = utcTime;
@@ -71,5 +71,5 @@ APP.updateWxBadge = function (key) {
   } catch(e) { document.getElementById('wx-local').textContent = ''; }
   document.getElementById('wx-badge').classList.add('show');
   const sb = document.getElementById('sb-wx');
-  if (sb) sb.textContent = temp.toFixed(1) + '\u00b0C';
+  if (sb) sb.textContent = temp.toFixed(1) + '°C';
 };

@@ -9,9 +9,9 @@ APP.initMap = function () {
   L.control.zoom({position:'topright'}).addTo(APP.map);
   L.control.scale({position:'bottomright',imperial:false}).addTo(APP.map);
   APP.TILES = {
-    carto:L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'\u00a9 CartoDB',maxZoom:19}),
-    osm:  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'\u00a9 OpenStreetMap',maxZoom:19}),
-    esri: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'\u00a9 Esri',maxZoom:18}),
+    carto:L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB',maxZoom:19}),
+    osm:  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}),
+    esri: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:18}),
   };
   APP.TILES.carto.addTo(APP.map);
   document.querySelector('.bm-btn[data-bm="carto"]').classList.add('active');
@@ -50,7 +50,7 @@ APP._applyCityCenters = function (citiesGeoJSON) {
     'Marseille':'marseille','Athen':'athens','Bukarest':'bucharest',
     'Bruxelles':'brussels','Glasgow':'glasgow','Lausanne':'lausanne',
     'Madrid':'madrid','Rom':'rome','Salzburg':'salzburg',
-    'Stockholm':'stockholm','T\u00fcbingen':'tuebingen',
+    'Stockholm':'stockholm','Tübingen':'tuebingen',
   };
   let updated=0;
   citiesGeoJSON.features.forEach(f => {
@@ -86,6 +86,7 @@ APP.toggleL = function (id, on) {
     return;
   }
   if (['lu','trees','imp'].includes(id)) { on?APP.WMS[id].addTo(APP.map):APP.map.removeLayer(APP.WMS[id]); return; }
+  if (id === 'gbif' && APP.curKey === 'salzburg' && !APP.plantaeCache) { APP._loadPlantae(); return; }
   if (!APP.LG[id]) return;
   on?APP.LG[id].addTo(APP.map):APP.map.removeLayer(APP.LG[id]);
 };
@@ -112,7 +113,7 @@ APP.setCity = async function (key) {
   APP._clearCityLayers(); APP.closeInfo();
   APP.map.flyTo(c.center,c.zoom,{duration:1.3});
   APP._buildBioLayers(c.center);
-  APP.showLoad('Loading\u2026');
+  APP.showLoad('Loading…');
   if (!APP.wfsDone) await new Promise(r=>{const t=setInterval(()=>{if(APP.wfsDone){clearInterval(t);r();}},150);});
   APP._addReferenceLayers(key,c);
   APP.hideLoad();
@@ -128,7 +129,7 @@ APP.setCity = async function (key) {
   });
   const bar=document.getElementById('stats-bar'); if(bar) bar.className='stats-bar show';
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  set('sb-lst',c.lst+'\u00b0C'); set('sb-uhi','+'+c.uhi); set('sb-green',c.green+'%');
+  set('sb-lst',c.lst+'°C'); set('sb-uhi','+'+c.uhi); set('sb-green',c.green+'%');
   APP.loadWeather();
   if (APP.analyticsOpen) APP.renderCharts(key);
 };
@@ -149,10 +150,37 @@ APP._addReferenceLayers = function (key,c) {
 APP._buildBioLayers = function (ct) {
   const [la,lo]=ct;
   APP.LG.n2k   = L.rectangle([[la-.15,lo-.25],[la+.15,lo+.25]],{color:'#16A34A',weight:1.5,fill:false,dashArray:'6 4'});
-  APP.LG.gbif  = L.layerGroup([]);
   APP.LG.green = L.layerGroup([]);
+  APP.LG.gbif  = L.layerGroup([]);
+  if (APP.curKey === 'salzburg') APP._loadPlantae();
   const skip=new Set(['lu','trees','imp','nuts','study','lst','uhi','utfvi']);
   Object.keys(APP.LG).forEach(k=>{if(!skip.has(k)&&APP.LV[k])APP.LG[k].addTo(APP.map);});
+};
+
+// Load real GBIF/Plantae points for Salzburg from GeoServer
+APP._loadPlantae = async function () {
+  if (APP.plantaeCache) { APP._renderPlantae(APP.plantaeCache); return; }
+  try {
+    const r = await fetch(APP.WFS.plantaeSalzburg);
+    const geojson = await r.json();
+    APP.plantaeCache = geojson;
+    console.log('[GBIF] Plantae Salzburg:', geojson.features?.length, 'points');
+    APP._renderPlantae(geojson);
+  } catch(e) { console.warn('[GBIF] Plantae fetch failed:', e.message); }
+};
+
+APP._renderPlantae = function (geojson) {
+  if (APP.curKey !== 'salzburg' || !geojson?.features?.length) return;
+  const layer = L.geoJSON(geojson, {
+    pointToLayer: (feature, latlng) => L.circleMarker(latlng, { radius:4, color:'none', fillColor:'#86EFAC', fillOpacity:.6 }),
+    onEachFeature: (feature, lyr) => {
+      const props = feature.properties || {};
+      const name = props.species || props.scientificName || props.name || 'Plantae';
+      lyr.bindPopup('<strong>' + name + '</strong>');
+    },
+  });
+  APP.LG.gbif = layer;
+  if (APP.LV.gbif) layer.addTo(APP.map);
 };
 
 APP._clearCityLayers = function () {
@@ -176,14 +204,14 @@ APP._fb = function (key) {
 APP._onMapClick = function () {
   if (!APP.curKey) return;
   const c=APP.CITIES[APP.curKey],wx=APP.wxCache?.[c.wxCity]||{};
-  document.getElementById('ip-lst').textContent   = c.lst+' \u00b0C';
+  document.getElementById('ip-lst').textContent   = c.lst+' °C';
   document.getElementById('ip-uhi').textContent   = '+'+c.uhi;
   document.getElementById('ip-utfvi').textContent = c.utfvi;
   document.getElementById('ip-lu').textContent    = c.land;
   document.getElementById('ip-nuts').textContent  = c.nuts3;
-  document.getElementById('ip-temp').textContent  = wx.temp_c!=null?parseFloat(wx.temp_c).toFixed(1)+' \u00b0C':'--';
-  document.getElementById('ip-dewp').textContent  = wx.dewp_c!=null?parseFloat(wx.dewp_c).toFixed(1)+' \u00b0C':'--';
-  document.getElementById('ip-wind').textContent  = wx.wind_spd_kt!=null?wx.wind_spd_kt+' kt'+(wx.wind_dir_deg?' @ '+wx.wind_dir_deg+'\u00b0':''):'--';
+  document.getElementById('ip-temp').textContent  = wx.temp_c!=null?parseFloat(wx.temp_c).toFixed(1)+' °C':'--';
+  document.getElementById('ip-dewp').textContent  = wx.dewp_c!=null?parseFloat(wx.dewp_c).toFixed(1)+' °C':'--';
+  document.getElementById('ip-wind').textContent  = wx.wind_spd_kt!=null?wx.wind_spd_kt+' kt'+(wx.wind_dir_deg?' @ '+wx.wind_dir_deg+'°':''):'--';
   const obs=wx.obs_time?new Date(wx.obs_time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' UTC':'--';
   document.getElementById('ip-obs').textContent=obs;
   document.getElementById('info-panel').style.display='block';
