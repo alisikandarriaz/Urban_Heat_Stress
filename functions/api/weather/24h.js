@@ -2,7 +2,10 @@ const TARGET = 'https://zgis185.geo.sbg.ac.at/group04/api/weather/24h';
 
 export async function onRequest() {
   try {
-    const r = await fetch(TARGET, { headers: { 'Accept': 'application/json' } });
+    const r = await fetch(TARGET, {
+      headers: { 'Accept': 'application/json' },
+      cf: { tlsClientAuth: false },
+    });
     const body = await r.text();
     return new Response(body, {
       status: r.status,
