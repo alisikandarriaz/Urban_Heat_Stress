@@ -109,27 +109,57 @@ APP.setBM = function (bm) {
 
 APP.setCity = async function (key) {
   if (!key) return;
-  APP.curKey=key; const c=APP.CITIES[key];
-  APP._clearCityLayers(); APP.closeInfo();
-  APP.map.flyTo(c.center,c.zoom,{duration:1.3});
+  APP.curKey = key;
+  const c = APP.CITIES[key];
+
+  APP._clearCityLayers();
+  APP.closeInfo();
+
+  // disable biodiversity layers for non-Salzburg cities
+  const isSalzburg = key === 'salzburg';
+  ['n2k','gbif','green','trees'].forEach(id => {
+    const cb  = document.getElementById('cb-' + id);
+    const row = cb ? cb.closest('.layer-row') : null;
+    if (cb)  cb.disabled = !isSalzburg;
+    if (row) row.style.opacity = isSalzburg ? '1' : '0.4';
+    if (!isSalzburg && cb) {
+      cb.checked  = false;
+      APP.LV[id]  = false;
+      if (APP.LG[id]) APP.map.removeLayer(APP.LG[id]);
+    }
+  });
+
+  APP.map.flyTo(c.center, c.zoom, { duration:1.3 });
   APP._buildBioLayers(c.center);
   APP.showLoad('Loading…');
-  if (!APP.wfsDone) await new Promise(r=>{const t=setInterval(()=>{if(APP.wfsDone){clearInterval(t);r();}},150);});
-  APP._addReferenceLayers(key,c);
+
+  if (!APP.wfsDone) await new Promise(r => {
+    const t = setInterval(() => { if (APP.wfsDone) { clearInterval(t); r(); } }, 150);
+  });
+
+  APP._addReferenceLayers(key, c);
   APP.hideLoad();
-  Object.keys(APP.YEAR_LAYERS).forEach(id=>{
+
+  Object.keys(APP.YEAR_LAYERS).forEach(id => {
     if (APP.LV[id]) {
-      const wmsId=APP.YEAR_LAYERS[id][APP.curYear];
+      const wmsId = APP.YEAR_LAYERS[id][APP.curYear];
       if (!APP.map.hasLayer(APP.WMS[wmsId])) APP.WMS[wmsId].addTo(APP.map);
     }
   });
-  ['lu','trees','imp'].forEach(id=>{
-    if (APP.LV[id]&&!APP.map.hasLayer(APP.WMS[id])) APP.WMS[id].addTo(APP.map);
-    if (!APP.LV[id]&&APP.map.hasLayer(APP.WMS[id])) APP.map.removeLayer(APP.WMS[id]);
+
+  ['lu','trees','imp'].forEach(id => {
+    if  (APP.LV[id] && !APP.map.hasLayer(APP.WMS[id])) APP.WMS[id].addTo(APP.map);
+    if (!APP.LV[id] &&  APP.map.hasLayer(APP.WMS[id])) APP.map.removeLayer(APP.WMS[id]);
   });
-  const bar=document.getElementById('stats-bar'); if(bar) bar.className='stats-bar show';
-  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  set('sb-lst',c.lst+'°C'); set('sb-uhi','+'+c.uhi); set('sb-green',c.green+'%');
+
+  const bar = document.getElementById('stats-bar');
+  if (bar) bar.className = 'stats-bar show';
+
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('sb-lst',   c.lst + '°C');
+  set('sb-uhi',   '+' + c.uhi);
+  set('sb-green', c.green + '%');
+
   APP.loadWeather();
   if (APP.analyticsOpen) APP.renderCharts(key);
 };

@@ -7,9 +7,7 @@ APP.WFS = {
   studyArea: 'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:study_area&maxFeatures=50&outputFormat=application/json',
   nuts:      'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:civis_nuts&maxFeatures=50&outputFormat=application/json',
   cities:    'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:civis_cities&maxFeatures=50&outputFormat=application/json',
-  plantaeSalzburg: 'https://geoserver22s.zgis.at/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:SalzburgPlantae_Export_s1104190&outputFormat=application/json',
-};
-
+plantaeSalzburg: 'https://geoserver22s.zgis.at/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:SalzburgPlantae_Export_s1104190&outputFormat=application/json',};
 APP.WMS_CONFIG = {
   lst2022:   { url:'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms', layer:'ipsdi_st26:LST2022',   opts:{version:'1.1.0',transparent:true,format:'image/png',attribution:'© Z_GIS PLUS Salzburg'} },
   lst2025:   { url:'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms', layer:'ipsdi_st26:LST2025',   opts:{version:'1.1.0',transparent:true,format:'image/png',attribution:'© Z_GIS PLUS Salzburg'} },
