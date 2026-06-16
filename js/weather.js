@@ -58,13 +58,25 @@ APP.startClock = function () {
 APP._tickClock = function () {
   if (!APP.curKey) return;
   const c = APP.CITIES[APP.curKey];
+  const now = new Date();
+  
+  // local time
   const el = document.getElementById('wx-local');
-  if (!el) return;
-  try {
-    el.textContent = new Date().toLocaleTimeString('en-GB', {
-      hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: c.tz
-    }) + ' local';
-  } catch(e) { /* invalid tz, ignore */ }
+  if (el) {
+    try {
+      el.textContent = now.toLocaleTimeString('en-GB', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: c.tz
+      }) + ' local';
+    } catch(e) {}
+  }
+
+  // UTC time — tick live
+  const utcEl = document.getElementById('wx-obs');
+  if (utcEl && utcEl.textContent.includes('UTC')) {
+    utcEl.textContent = now.toLocaleTimeString('en-GB', {
+      hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC'
+    }) + ' UTC';
+  }
 };
 
 APP.updateWxBadge = function (key) {

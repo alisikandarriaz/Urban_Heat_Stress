@@ -283,11 +283,10 @@ html.light .grp-lbl{color:#5a5a58;}
 .leg-ramp{width:12px;height:50px;border-radius:2px;display:inline-block;flex-shrink:0;}
 .leg-labels{display:flex;flex-direction:column;justify-content:space-between;height:50px;font-size:9px;color:var(--txm);margin-left:3px;}
 
-/* Legend swatches horizontal */
-.leg-ramp-h{display:flex;flex-direction:column;gap:1px;}
-.leg-swatch{width:12px;height:7px;display:block;border-radius:1px;}
-.leg-labels-h{display:flex;flex-direction:column;gap:1px;font-size:8px;color:var(--txm);margin-left:3px;justify-content:center;}
-
-/* Footer adjustment for taller legend */
-.ui-footer{align-items:flex-start;padding:6px 14px;}
+/* Legend */
+.leg-ramp{width:40px;height:10px;border-radius:2px;display:inline-block;flex-shrink:0;}
+.leg-txt{display:flex;gap:4px;font-size:9px;color:var(--txm);align-items:center;}
+.leg-cat{display:flex;align-items:center;gap:3px;}
+.leg-swatch{width:14px;height:10px;display:inline-block;border-radius:2px;flex-shrink:0;cursor:help;}
+.ui-footer{align-items:center;padding:5px 14px;flex-wrap:wrap;gap:10px;}
 }
