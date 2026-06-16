@@ -12,7 +12,6 @@ APP.init = function () {
   Chart.defaults.color       = '#73726c';
   Chart.defaults.borderColor = '#2e2e2c';
   APP.loadWeather();
-  APP.startClock();
   APP.initOnboarding();
   console.log('[App] HotEurope SDI ready');
 };
