@@ -28,17 +28,17 @@ APP.YEAR_LAYERS = {
 };
 
 APP.CITIES = {
-  marseille: { label:'Aix-en-Provence & Marseille, FR', wxCity:'Marseille', nuts3:'FRL06', tz:'Europe/Paris',    center:[43.2965,5.3698],  zoom:11, lst:35.8, uhi:2.4, utfvi:'Strong',  land:'Discontinuous urban', green:22, imp:50, pop:877215  },
+  marseille: { label:'Aix-en-Provence & Marseille, FR', wxCity:'Marseille', nuts3:'FRL04', tz:'Europe/Paris',    center:[43.2965,5.3698],  zoom:11, lst:35.8, uhi:2.4, utfvi:'Strong',  land:'Discontinuous urban', green:22, imp:50, pop:877215  },
   athens:    { label:'Athens, GR',                      wxCity:'Athens',    nuts3:'EL303', tz:'Europe/Athens',   center:[37.9838,23.7275], zoom:12, lst:39.2, uhi:4.1, utfvi:'Extreme', land:'Continuous urban',    green:12, imp:68, pop:643452  },
   bucharest: { label:'Bucharest, RO',                   wxCity:'Bucharest', nuts3:'RO321', tz:'Europe/Bucharest',center:[44.4268,26.1025], zoom:11, lst:36.2, uhi:2.6, utfvi:'Strong',  land:'Urban fabric',        green:18, imp:58, pop:2142929 },
   brussels:  { label:'Brussels, BE',                    wxCity:'Brussels',  nuts3:'BE100', tz:'Europe/Brussels', center:[50.8503,4.3517],  zoom:12, lst:31.4, uhi:1.9, utfvi:'Moderate',land:'Continuous urban',    green:24, imp:52, pop:1222637 },
   glasgow:   { label:'Glasgow, UK',                     wxCity:'Glasgow',   nuts3:'UKM82', tz:'Europe/London',   center:[55.8642,-4.2518], zoom:11, lst:28.6, uhi:1.4, utfvi:'Moderate',land:'Discontinuous urban', green:32, imp:38, pop:null    },
-  lausanne:  { label:'Lausanne, CH',                    wxCity:'Geneva',    nuts3:'CH013', tz:'Europe/Zurich',   center:[46.5197,6.6323],  zoom:12, lst:29.8, uhi:1.6, utfvi:'Moderate',land:'Discontinuous urban', green:38, imp:35, pop:null    },
+  lausanne:  { label:'Lausanne, CH',                    wxCity:'Geneva',    nuts3:'CH011', tz:'Europe/Zurich',   center:[46.5197,6.6323],  zoom:12, lst:29.8, uhi:1.6, utfvi:'Moderate',land:'Discontinuous urban', green:38, imp:35, pop:null    },
   madrid:    { label:'Madrid, ES',                      wxCity:'Madrid',    nuts3:'ES300', tz:'Europe/Madrid',   center:[40.4168,-3.7038], zoom:10, lst:37.1, uhi:3.4, utfvi:'Extreme', land:'Continuous urban',    green:15, imp:62, pop:3255944 },
   rome:      { label:'Rome, IT',                        wxCity:'Rome',      nuts3:'ITI43', tz:'Europe/Rome',     center:[41.9028,12.4964], zoom:11, lst:38.5, uhi:3.1, utfvi:'Strong',  land:'Continuous urban',    green:20, imp:55, pop:2761632 },
   salzburg:  { label:'Salzburg, AT',                    wxCity:'Salzburg',  nuts3:'AT323', tz:'Europe/Vienna',   center:[47.8095,13.0432], zoom:12, lst:30.2, uhi:1.5, utfvi:'Moderate',land:'Discontinuous urban', green:40, imp:32, pop:157245  },
   stockholm: { label:'Stockholm, SE',                   wxCity:'Stockholm', nuts3:'SE110', tz:'Europe/Stockholm',center:[59.3293,18.0686], zoom:11, lst:26.8, uhi:1.2, utfvi:'Weak',    land:'Discontinuous urban', green:45, imp:30, pop:1689945 },
-  tuebingen: { label:'Tubingen, DE',                    wxCity:'Stuttgart', nuts3:'DE141', tz:'Europe/Berlin',   center:[48.5216,9.0576],  zoom:12, lst:32.4, uhi:1.7, utfvi:'Moderate',land:'Discontinuous urban', green:36, imp:36, pop:83416   },
+  tuebingen: { label:'Tubingen, DE',                    wxCity:'Stuttgart', nuts3:'DE142', tz:'Europe/Berlin',   center:[48.5216,9.0576],  zoom:12, lst:32.4, uhi:1.7, utfvi:'Moderate',land:'Discontinuous urban', green:36, imp:36, pop:83416   },
 };
 
 APP.CITY_KEYS   = Object.keys(APP.CITIES);

@@ -75,20 +75,37 @@ APP._findByNuts = function (col,nuts3) {
 };
 
 APP.toggleL = function (id, on) {
-  APP.LV[id]=on;
+  APP.LV[id] = on;
+
+  // Heat analysis WMS layers (year-dependent)
   if (APP.YEAR_LAYERS[id]) {
     if (on) {
-      const wmsId=APP.YEAR_LAYERS[id][APP.curYear];
+      const wmsId = APP.YEAR_LAYERS[id][APP.curYear];
       if (!APP.map.hasLayer(APP.WMS[wmsId])) APP.WMS[wmsId].addTo(APP.map);
     } else {
-      Object.values(APP.YEAR_LAYERS[id]).forEach(yid=>{ if(APP.map.hasLayer(APP.WMS[yid])) APP.map.removeLayer(APP.WMS[yid]); });
+      Object.values(APP.YEAR_LAYERS[id]).forEach(yid => {
+        if (APP.map.hasLayer(APP.WMS[yid])) APP.map.removeLayer(APP.WMS[yid]);
+      });
     }
     return;
   }
-  if (['lu','trees','imp'].includes(id)) { on?APP.WMS[id].addTo(APP.map):APP.map.removeLayer(APP.WMS[id]); return; }
-  if (id === 'gbif' && APP.curKey === 'salzburg' && !APP.plantaeCache) { APP._loadPlantae(); return; }
-  if (!APP.LG[id]) return;
-  on?APP.LG[id].addTo(APP.map):APP.map.removeLayer(APP.LG[id]);
+
+  // Global WMS layers (land use, trees, imperviousness)
+  if (['lu','trees','imp'].includes(id)) {
+    on ? APP.WMS[id].addTo(APP.map) : APP.map.removeLayer(APP.WMS[id]);
+    return;
+  }
+
+  // Salzburg Plantae — load on demand
+  if (id === 'gbif' && APP.curKey === 'salzburg' && on && !APP.plantaeCache) {
+    APP._loadPlantae();
+    return;
+  }
+
+  // All other vector layers (nuts, study, n2k, gbif, green)
+  if (!APP.curKey) return; // no city selected yet, nothing to show
+  if (!APP.LG[id]) return; // layer not built yet
+  on ? APP.LG[id].addTo(APP.map) : APP.map.removeLayer(APP.LG[id]);
 };
 
 APP.setYear = function (year) {
