@@ -1,4 +1,4 @@
-const TARGET = 'https://zgis185.geo.sbg.ac.at/group04/api/weather';
+const TARGET = 'http://zgis185.geo.sbg.ac.at/group04/api/weather';
 
 export async function onRequest() {
   try {
