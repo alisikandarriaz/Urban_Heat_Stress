@@ -121,7 +121,6 @@
 
       <div class="stats-bar" id="stats-bar">
         <div class="stat-pill"><i class="ti ti-temperature" style="color:#EF4444;font-size:12px"></i><span id="sb-lst" style="color:#EF4444;font-weight:600">--</span><small>LST</small></div>
-        <div class="stat-pill"><i class="ti ti-arrow-badge-up" style="color:#A78BFA;font-size:12px"></i><span id="sb-uhi" style="color:#A78BFA;font-weight:600">--</span><small>UHI</small></div>
         <div class="stat-pill"><i class="ti ti-leaf" style="color:#22C55E;font-size:12px"></i><span id="sb-green" style="color:#22C55E;font-weight:600">--%</span><small>green</small></div>
         <div class="stat-pill"><i class="ti ti-temperature" style="color:#60A5FA;font-size:12px"></i><span id="sb-wx" style="color:#60A5FA;font-weight:600">--</span><small>live</small></div>
       </div>
@@ -211,16 +210,65 @@
   </div>
 
   <!-- ── Footer ── -->
-  <footer class="ui-footer">
-    <strong data-i18n="legend">Legend</strong>
-    <span class="leg-item"><span class="leg-ramp grad-lst"></span>LST</span>
-    <span class="leg-item"><span class="leg-dot" style="border:1.5px solid #16A34A;background:transparent;display:inline-block"></span>Natura 2000</span>
-    <span class="leg-item"><span class="leg-dot" style="background:#86EFAC;display:inline-block"></span><span data-i18n="gbif">Species</span></span>
-    <span class="leg-item"><span class="leg-dot" style="background:#22C55E;display:inline-block"></span><span data-i18n="trees">Trees</span></span>
-    <span class="leg-item"><span class="leg-dash" style="border-color:#F97316"></span><span data-i18n="study">Study area</span></span>
-    <span class="leg-item"><span class="leg-dash"></span>NUTS3</span>
-    <span class="leg-src">Landsat 8 &middot; Copernicus &middot; GBIF &middot; Eurostat &middot; Aviation Weather API &middot; Z_GIS PLUS Salzburg &middot; v1.0</span>
-  </footer>
+<footer class="ui-footer">
+  <strong data-i18n="legend">Legend</strong>
+
+  <!-- LST -->
+  <span class="leg-item">
+    <span class="leg-ramp" style="background:linear-gradient(to top,#a8d8ea,#fffde7,#f97316,#ef4444)"></span>
+    <span class="leg-labels">
+      <span>60°C</span>
+      <span style="font-weight:600;font-size:10px">LST</span>
+      <span>0°C</span>
+    </span>
+  </span>
+
+  <!-- UHI -->
+  <span class="leg-item">
+    <span class="leg-ramp-h">
+      <span class="leg-swatch" style="background:#1a6fd4"></span>
+      <span class="leg-swatch" style="background:#00e5ff"></span>
+      <span class="leg-swatch" style="background:#f5c518"></span>
+      <span class="leg-swatch" style="background:#f97316"></span>
+      <span class="leg-swatch" style="background:#6b0000"></span>
+    </span>
+    <span class="leg-labels-h">
+      <span>much cooler</span>
+      <span>cooler</span>
+      <span style="font-weight:600;font-size:10px">UHI</span>
+      <span>warmer</span>
+      <span>much warmer</span>
+    </span>
+  </span>
+
+  <!-- UTFVI -->
+  <span class="leg-item">
+    <span class="leg-ramp-h">
+      <span class="leg-swatch" style="background:#fde8e8"></span>
+      <span class="leg-swatch" style="background:#f9c4b0"></span>
+      <span class="leg-swatch" style="background:#f4845f"></span>
+      <span class="leg-swatch" style="background:#e03c2b"></span>
+      <span class="leg-swatch" style="background:#a00000"></span>
+      <span class="leg-swatch" style="background:#4a0000"></span>
+    </span>
+    <span class="leg-labels-h">
+      <span>none</span>
+      <span>weak</span>
+      <span>middle</span>
+      <span style="font-weight:600;font-size:10px">UTFVI</span>
+      <span>strong</span>
+      <span>stronger</span>
+      <span>strongest</span>
+    </span>
+  </span>
+
+  <span class="leg-item"><span class="leg-dot" style="border:1.5px solid #16A34A;background:transparent;display:inline-block"></span>Natura 2000</span>
+  <span class="leg-item"><span class="leg-dot" style="background:#86EFAC;display:inline-block"></span><span data-i18n="gbif">Species</span></span>
+  <span class="leg-item"><span class="leg-dot" style="background:#22C55E;display:inline-block"></span><span data-i18n="trees">Trees</span></span>
+  <span class="leg-item"><span class="leg-dash" style="border-color:#F97316"></span><span data-i18n="study">Study area</span></span>
+  <span class="leg-item"><span class="leg-dash"></span>NUTS3</span>
+  <span class="leg-src">Landsat 8 &middot; Copernicus &middot; GBIF &middot; Eurostat &middot; Aviation Weather API &middot; Z_GIS PLUS Salzburg &middot; v1.0</span>
+</footer>
 </div>
 
 <!-- ── About Modal ── -->
