@@ -1,10 +1,13 @@
-const TARGET = 'http://zgis185.geo.sbg.ac.at/group04/api/weather/24h';
+const TARGET = 'https://zgis185.geo.sbg.ac.at/group04/api/weather/24h';
 
 export async function onRequest() {
   try {
     const r = await fetch(TARGET, {
       headers: { 'Accept': 'application/json' },
-      cf: { tlsClientAuth: false },
+      cf: { 
+        tlsClientAuth: false,
+        ssl: { verifyHostname: false }
+      },
     });
     const body = await r.text();
     return new Response(body, {
