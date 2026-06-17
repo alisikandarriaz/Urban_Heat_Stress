@@ -109,14 +109,33 @@ APP.exportCSV = function () {
 
 // ── XML metadata ───────────────────────────────────────────────────────
 APP.dlXML = function (id) {
-  const m=APP.XML_META[id]||{t:id,s:'HotEurope SDI',a:'',crs:'EPSG:4326'};
-  const day=new Date().toISOString().slice(0,10);
-  const xml='<?xml version="1.0" encoding="UTF-8"?>\n<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">\n  <fileIdentifier><gco:CharacterString>UHS_SDI_'+id+'_CIVIS_v1.0</gco:CharacterString></fileIdentifier>\n  <language><gco:CharacterString>eng</gco:CharacterString></language>\n  <dateStamp><gco:Date>'+day+'</gco:Date></dateStamp>\n  <identificationInfo><MD_DataIdentification>\n    <citation><CI_Citation><title><gco:CharacterString>'+m.t+'</gco:CharacterString></title><date><CI_Date><gco:Date>'+day+'</gco:Date><dateType><CI_DateTypeCode codeListValue="creation"/></dateType></CI_Date></date></CI_Citation></citation>\n    <abstract><gco:CharacterString>'+m.a+'</gco:CharacterString></abstract>\n    <credit><gco:CharacterString>Source: '+m.s+'</gco:CharacterString></credit>\n    <pointOfContact><CI_ResponsibleParty><organisationName><gco:CharacterString>Z_GIS PLUS Salzburg, Paris-Lodron University</gco:CharacterString></organisationName><role><CI_RoleCode codeListValue="originator"/></role></CI_ResponsibleParty></pointOfContact>\n  </MD_DataIdentification></identificationInfo>\n  <referenceSystemInfo><MD_ReferenceSystem><referenceSystemIdentifier><RS_Identifier><gco:CharacterString>'+m.crs+'</gco:CharacterString></RS_Identifier></referenceSystemIdentifier></MD_ReferenceSystem></referenceSystemInfo>\n</MD_Metadata>';
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([xml],{type:'application/xml'}));
-  a.download='UHS_SDI_metadata_'+id+'.xml'; a.click();
+  const yr = APP.curYear || '2022';
+  const FILE_MAP = {
+    lst:   'metadata/LST'   + yr + '_metadata.xml',
+    uhi:   'metadata/UHI'   + yr + '_metadata.xml',
+    utfvi: 'metadata/UTFVI' + yr + '_metadata.xml',
+    nuts:  'metadata/NUTS2024_metadata.xml',
+    study: 'metadata/studyarea_metadata.xml',
+    lu:    'metadata/urbanatlas2018_metadata.xml',
+    trees: 'metadata/streettrees2018_metadata.xml',
+    imp:   'metadata/impervioussurfaces2021_metadata.xml',
+  };
+  const file = FILE_MAP[id];
+  if (file) {
+    const a = document.createElement('a');
+    a.href = file;
+    a.download = file.split('/').pop();
+    a.click();
+    return;
+  }
+  const m = APP.XML_META[id] || {t:id, s:'HotEurope SDI', a:'', crs:'EPSG:4326'};
+  const day = new Date().toISOString().slice(0,10);
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">\n  <fileIdentifier><gco:CharacterString>UHS_SDI_' + id + '</gco:CharacterString></fileIdentifier>\n  <dateStamp><gco:Date>' + day + '</gco:Date></dateStamp>\n  <identificationInfo><MD_DataIdentification>\n    <citation><CI_Citation><title><gco:CharacterString>' + m.t + '</gco:CharacterString></title></CI_Citation></citation>\n    <abstract><gco:CharacterString>' + m.a + '</gco:CharacterString></abstract>\n    <credit><gco:CharacterString>Source: ' + m.s + '</gco:CharacterString></credit>\n  </MD_DataIdentification></identificationInfo>\n</MD_Metadata>';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([xml], {type:'application/xml'}));
+  a.download = 'UHS_SDI_metadata_' + id + '.xml';
+  a.click();
 };
-
 // ── Onboarding ─────────────────────────────────────────────────────────
 APP.obStep=1; APP.OB_TOTAL=5;
 
