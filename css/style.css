@@ -78,9 +78,10 @@ html.light .stat-pill{background:rgba(255,255,255,.88);border-color:var(--bd);}
 .info-row .lbl{color:var(--txm);}
 .info-row .val{color:var(--tx2);}
 .hot{color:#EF4444 !important;font-weight:500;}
-#click-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:500;color:#fff;background:rgba(249,115,22,.88);padding:6px 16px;border-radius:20px;pointer-events:none;z-index:900;display:flex;align-items:center;gap:6px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.3);animation:hint-pulse 2.5s ease-in-out infinite;}
-#click-hint::before{content:'\ea9e';font-family:'tabler-icons';font-size:14px;}
-@keyframes hint-pulse{0%,100%{opacity:1;transform:translateX(-50%) scale(1);}50%{opacity:.75;transform:translateX(-50%) scale(0.97);}}
+
+/* Hint Button*/
+#click-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:500;color:#fff;background:rgba(249,115,22,.88);padding:5px 14px;border-radius:20px;pointer-events:none;z-index:900;white-space:nowrap;width:fit-content;box-shadow:0 2px 8px rgba(0,0,0,.3);animation:hint-pulse 2.5s ease-in-out infinite;}
+@keyframes hint-pulse{0%,100%{opacity:1;}50%{opacity:.65;}}
 html.light #click-hint{background:rgba(249,115,22,.92);color:#fff;}
 
 /* Right panel */
