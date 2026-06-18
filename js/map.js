@@ -9,9 +9,9 @@ APP.initMap = function () {
   L.control.zoom({position:'topright'}).addTo(APP.map);
   L.control.scale({position:'bottomright',imperial:false}).addTo(APP.map);
   APP.TILES = {
-    carto:L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB',maxZoom:19}),
-    osm:  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}),
-    esri: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:18}),
+    carto:L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'\u00a9 CartoDB',maxZoom:19}),
+    osm:  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'\u00a9 OpenStreetMap',maxZoom:19}),
+    esri: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'\u00a9 Esri',maxZoom:18}),
   };
   APP.TILES.carto.addTo(APP.map);
   document.querySelector('.bm-btn[data-bm="carto"]').classList.add('active');
@@ -35,6 +35,9 @@ APP._loadAllWFS = async function () {
     console.log('[WFS] study_area props:',  sa.features?.[0]?.properties);
     console.log('[WFS] civis_nuts props:',  nuts.features?.[0]?.properties);
     console.log('[WFS] civis_cities props:', cities.features?.[0]?.properties);
+    // log all NUTS IDs available in WFS for debugging boundary matching
+    const nutsKey=Object.keys(nuts.features?.[0]?.properties||{}).find(k=>k.toLowerCase().includes('nuts')||k==='id');
+    if(nutsKey) console.log('[WFS] All NUTS IDs in civis_nuts:',nuts.features.map(f=>f.properties[nutsKey]));
     APP._applyCityCenters(cities);
     if (APP.curKey) {
       ['nuts','study'].forEach(k=>{if(APP.LG[k]){APP.map.removeLayer(APP.LG[k]);delete APP.LG[k];}});
@@ -49,7 +52,7 @@ APP._applyCityCenters = function (citiesGeoJSON) {
     'Marseille':'marseille','Athen':'athens','Bukarest':'bucharest',
     'Bruxelles':'brussels','Glasgow':'glasgow','Lausanne':'lausanne',
     'Madrid':'madrid','Rom':'rome','Salzburg':'salzburg',
-    'Stockholm':'stockholm','Tübingen':'tuebingen',
+    'Stockholm':'stockholm','T\u00fcbingen':'tuebingen',
   };
   let updated=0;
   citiesGeoJSON.features.forEach(f => {
@@ -66,11 +69,18 @@ APP._applyCityCenters = function (citiesGeoJSON) {
 };
 
 APP._findByNuts = function (col,nuts3) {
-  if (!col?.features?.length) return null;
+  if (!col?.features?.length) { console.warn('[findByNuts] Empty collection for',nuts3); return null; }
   const sample=col.features[0]?.properties||{};
   const key=['NUTS_ID','nuts_id','NUTSID','nuts3','NUTS3','nuts_code','id'].find(k=>k in sample);
-  if (!key) return null;
-  return col.features.find(f=>String(f.properties[key]).toUpperCase()===nuts3.toUpperCase())||null;
+  if (!key) { console.warn('[findByNuts] No NUTS key found. Props:',Object.keys(sample)); return null; }
+  const allIds=col.features.map(f=>String(f.properties[key]));
+  console.log('[findByNuts] Looking for',nuts3,'in',allIds);
+  // 1. exact match (case-insensitive)
+  let found=col.features.find(f=>String(f.properties[key]).toUpperCase()===nuts3.toUpperCase());
+  // 2. prefix match — e.g. "EL3" matches "EL303"
+  if (!found) found=col.features.find(f=>nuts3.toUpperCase().startsWith(String(f.properties[key]).toUpperCase())||String(f.properties[key]).toUpperCase().startsWith(nuts3.toUpperCase()));
+  if (!found) console.warn('[findByNuts] No match for',nuts3,'— available:',allIds);
+  return found||null;
 };
 
 APP.toggleL = function (id, on) {
@@ -110,6 +120,7 @@ APP.setCity = async function (key) {
   if (!key) return;
   APP.curKey=key; const c=APP.CITIES[key];
   APP._clearCityLayers(); APP.closeInfo();
+  // gbif (Species density) is Salzburg-only
   const isSalzburg = key === 'salzburg';
   const gbifCb = document.getElementById('cb-gbif');
   const gbifRow = gbifCb ? gbifCb.closest('.layer-row') : null;
@@ -160,6 +171,7 @@ APP._buildBioLayers = function (ct) {
   Object.keys(APP.LG).forEach(k=>{if(!skip.has(k)&&APP.LV[k])APP.LG[k].addTo(APP.map);});
 };
 
+// Load real GBIF/Plantae points for Salzburg from GeoServer
 APP._loadPlantae = async function () {
   if (APP.plantaeCache) { APP._renderPlantae(APP.plantaeCache); return; }
   try {
@@ -203,18 +215,19 @@ APP._fb = function (key) {
   return FB[key]||[[0,0],[1,1]];
 };
 
-// ── FIXED: removed ip-uhi, ip-utfvi, ip-lu references (elements removed from HTML)
 APP._onMapClick = function () {
   if (!APP.curKey) return;
-  const c=APP.CITIES[APP.curKey], wx=APP.wxCache?.[c.wxCity]||{};
-  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  set('ip-lst', c.lst+' \u00b0C');
-  set('ip-nuts', c.nuts3);
-  set('ip-temp', wx.temp_c!=null?parseFloat(wx.temp_c).toFixed(1)+' \u00b0C':'--');
-  set('ip-dewp', wx.dewp_c!=null?parseFloat(wx.dewp_c).toFixed(1)+' \u00b0C':'--');
-  set('ip-wind', wx.wind_spd_kt!=null?wx.wind_spd_kt+' kt'+(wx.wind_dir_deg?' @ '+wx.wind_dir_deg+'\u00b0':''):'--');
+  const c=APP.CITIES[APP.curKey],wx=APP.wxCache?.[c.wxCity]||{};
+  document.getElementById('ip-lst').textContent   = c.lst+' \u00b0C';
+  document.getElementById('ip-uhi').textContent   = '+'+c.uhi;
+  document.getElementById('ip-utfvi').textContent = c.utfvi;
+  document.getElementById('ip-lu').textContent    = c.land;
+  document.getElementById('ip-nuts').textContent  = c.nuts3;
+  document.getElementById('ip-temp').textContent  = wx.temp_c!=null?parseFloat(wx.temp_c).toFixed(1)+' \u00b0C':'--';
+  document.getElementById('ip-dewp').textContent  = wx.dewp_c!=null?parseFloat(wx.dewp_c).toFixed(1)+' \u00b0C':'--';
+  document.getElementById('ip-wind').textContent  = wx.wind_spd_kt!=null?wx.wind_spd_kt+' kt'+(wx.wind_dir_deg?' @ '+wx.wind_dir_deg+'\u00b0':''):'--';
   const obs=wx.obs_time?new Date(wx.obs_time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' UTC':'--';
-  set('ip-obs', obs);
+  document.getElementById('ip-obs').textContent=obs;
   document.getElementById('info-panel').style.display='block';
   document.getElementById('click-hint').style.display='none';
 };
