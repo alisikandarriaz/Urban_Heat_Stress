@@ -35,7 +35,6 @@ APP._loadAllWFS = async function () {
     console.log('[WFS] study_area props:',  sa.features?.[0]?.properties);
     console.log('[WFS] civis_nuts props:',  nuts.features?.[0]?.properties);
     console.log('[WFS] civis_cities props:', cities.features?.[0]?.properties);
-    console.log('[WFS] civis_cities geom type:', cities.features?.[0]?.geometry?.type);
     APP._applyCityCenters(cities);
     if (APP.curKey) {
       ['nuts','study'].forEach(k=>{if(APP.LG[k]){APP.map.removeLayer(APP.LG[k]);delete APP.LG[k];}});
@@ -111,7 +110,6 @@ APP.setCity = async function (key) {
   if (!key) return;
   APP.curKey=key; const c=APP.CITIES[key];
   APP._clearCityLayers(); APP.closeInfo();
-  // gbif (Species density) is Salzburg-only
   const isSalzburg = key === 'salzburg';
   const gbifCb = document.getElementById('cb-gbif');
   const gbifRow = gbifCb ? gbifCb.closest('.layer-row') : null;
@@ -120,21 +118,24 @@ APP.setCity = async function (key) {
   if (!isSalzburg && gbifCb) { gbifCb.checked=false; APP.LV.gbif=false; if(APP.LG.gbif) APP.map.removeLayer(APP.LG.gbif); }
   APP.map.flyTo(c.center,c.zoom,{duration:1.3});
   APP._buildBioLayers(c.center);
-  APP.showLoad('Loading…');
-  if (!APP.wfsDone) await new Promise(r=>{const t=setInterval(()=>{if(APP.wfsDone){clearInterval(t);r();}},150);});
-  APP._addReferenceLayers(key,c);
+  APP.showLoad('Loading\u2026');
+  if (!APP.wfsDone) await new Promise(r=>{
+    const t=setInterval(()=>{if(APP.wfsDone){clearInterval(t);r();}},150);
+    setTimeout(()=>{clearInterval(t);APP.wfsDone=true;r();},10000);
+  });
+  try { APP._addReferenceLayers(key,c); } catch(e){ console.warn('[setCity] ref layers failed:',e.message); }
   APP.hideLoad();
-Object.keys(APP.YEAR_LAYERS).forEach(id=>{
+  Object.keys(APP.YEAR_LAYERS).forEach(id=>{
     Object.values(APP.YEAR_LAYERS[id]).forEach(yid=>{if(APP.map.hasLayer(APP.WMS[yid]))APP.map.removeLayer(APP.WMS[yid]);});
     if(APP.LV[id])APP.WMS[APP.YEAR_LAYERS[id][APP.curYear]].addTo(APP.map);
-});
+  });
   ['lu','trees','imp'].forEach(id=>{
     if (APP.LV[id]&&!APP.map.hasLayer(APP.WMS[id])) APP.WMS[id].addTo(APP.map);
     if (!APP.LV[id]&&APP.map.hasLayer(APP.WMS[id])) APP.map.removeLayer(APP.WMS[id]);
   });
   const bar=document.getElementById('stats-bar'); if(bar) bar.className='stats-bar show';
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  set('sb-lst',c.lst+'°C'); set('sb-uhi','+'+c.uhi); set('sb-green',c.green+'%');
+  set('sb-lst',c.lst+'\u00b0C'); set('sb-uhi','+'+c.uhi); set('sb-green',c.green+'%');
   APP.loadWeather();
   if (APP.analyticsOpen) APP.renderCharts(key);
 };
@@ -202,19 +203,18 @@ APP._fb = function (key) {
   return FB[key]||[[0,0],[1,1]];
 };
 
+// ── FIXED: removed ip-uhi, ip-utfvi, ip-lu references (elements removed from HTML)
 APP._onMapClick = function () {
   if (!APP.curKey) return;
-  const c=APP.CITIES[APP.curKey],wx=APP.wxCache?.[c.wxCity]||{};
-  document.getElementById('ip-lst').textContent   = c.lst+' °C';
-  document.getElementById('ip-uhi').textContent   = '+'+c.uhi;
-  document.getElementById('ip-utfvi').textContent = c.utfvi;
-  document.getElementById('ip-lu').textContent    = c.land;
-  document.getElementById('ip-nuts').textContent  = c.nuts3;
-  document.getElementById('ip-temp').textContent  = wx.temp_c!=null?parseFloat(wx.temp_c).toFixed(1)+' °C':'--';
-  document.getElementById('ip-dewp').textContent  = wx.dewp_c!=null?parseFloat(wx.dewp_c).toFixed(1)+' °C':'--';
-  document.getElementById('ip-wind').textContent  = wx.wind_spd_kt!=null?wx.wind_spd_kt+' kt'+(wx.wind_dir_deg?' @ '+wx.wind_dir_deg+'°':''):'--';
+  const c=APP.CITIES[APP.curKey], wx=APP.wxCache?.[c.wxCity]||{};
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('ip-lst', c.lst+' \u00b0C');
+  set('ip-nuts', c.nuts3);
+  set('ip-temp', wx.temp_c!=null?parseFloat(wx.temp_c).toFixed(1)+' \u00b0C':'--');
+  set('ip-dewp', wx.dewp_c!=null?parseFloat(wx.dewp_c).toFixed(1)+' \u00b0C':'--');
+  set('ip-wind', wx.wind_spd_kt!=null?wx.wind_spd_kt+' kt'+(wx.wind_dir_deg?' @ '+wx.wind_dir_deg+'\u00b0':''):'--');
   const obs=wx.obs_time?new Date(wx.obs_time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' UTC':'--';
-  document.getElementById('ip-obs').textContent=obs;
+  set('ip-obs', obs);
   document.getElementById('info-panel').style.display='block';
   document.getElementById('click-hint').style.display='none';
 };
