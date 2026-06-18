@@ -124,12 +124,10 @@ APP.setCity = async function (key) {
   if (!APP.wfsDone) await new Promise(r=>{const t=setInterval(()=>{if(APP.wfsDone){clearInterval(t);r();}},150);});
   APP._addReferenceLayers(key,c);
   APP.hideLoad();
-  Object.keys(APP.YEAR_LAYERS).forEach(id=>{
-    if (APP.LV[id]) {
-      const wmsId=APP.YEAR_LAYERS[id][APP.curYear];
-      if (!APP.map.hasLayer(APP.WMS[wmsId])) APP.WMS[wmsId].addTo(APP.map);
-    }
-  });
+Object.keys(APP.YEAR_LAYERS).forEach(id=>{
+    Object.values(APP.YEAR_LAYERS[id]).forEach(yid=>{if(APP.map.hasLayer(APP.WMS[yid]))APP.map.removeLayer(APP.WMS[yid]);});
+    if(APP.LV[id])APP.WMS[APP.YEAR_LAYERS[id][APP.curYear]].addTo(APP.map);
+});
   ['lu','trees','imp'].forEach(id=>{
     if (APP.LV[id]&&!APP.map.hasLayer(APP.WMS[id])) APP.WMS[id].addTo(APP.map);
     if (!APP.LV[id]&&APP.map.hasLayer(APP.WMS[id])) APP.map.removeLayer(APP.WMS[id]);

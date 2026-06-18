@@ -92,7 +92,7 @@
       <label class="layer-row"><input type="checkbox" id="cb-uhi" onchange="APP.toggleL('uhi',this.checked)"><span class="sw grad-uhi"></span><span class="lyr-name" data-i18n="uhi">UHI index</span><button class="xml-btn" onclick="APP.dlXML('uhi')"><i class="ti ti-download"></i><span>Meta</span></button></label>
       <label class="layer-row grp-gap"><input type="checkbox" id="cb-utfvi" onchange="APP.toggleL('utfvi',this.checked)"><span class="sw grad-utfvi"></span><span class="lyr-name" data-i18n="utfvi">UTFVI class</span><button class="xml-btn" onclick="APP.dlXML('utfvi')"><i class="ti ti-download"></i><span>Meta</span></button></label>
 
-     <div class="grp-lbl" data-i18n="BIODIVERSITY">BIODIVERSITY</div>
+      <div class="grp-lbl" data-i18n="BIODIVERSITY">BIODIVERSITY</div>
       <label class="layer-row"><input type="checkbox" id="cb-gbif" onchange="APP.toggleL('gbif',this.checked)"><span class="sw-dot" style="background:#86EFAC"></span><span class="lyr-name" data-i18n="gbif">Species density</span><button class="xml-btn" onclick="APP.dlXML('gbif')"><i class="ti ti-download"></i><span>Meta</span></button></label>
       <label class="layer-row grp-gap"><input type="checkbox" id="cb-trees" onchange="APP.toggleL('trees',this.checked)"><span class="sw" style="background:#22C55E"></span><span class="lyr-name" data-i18n="trees">Street trees</span><button class="xml-btn" onclick="APP.dlXML('trees')"><i class="ti ti-download"></i><span>Meta</span></button></label>
 
@@ -119,6 +119,7 @@
 
       <div class="stats-bar" id="stats-bar">
         <div class="stat-pill"><i class="ti ti-temperature" style="color:#EF4444;font-size:12px"></i><span id="sb-lst" style="color:#EF4444;font-weight:600">--</span><small>LST</small></div>
+        <div class="stat-pill"><i class="ti ti-arrow-badge-up" style="color:#A78BFA;font-size:12px"></i><span id="sb-uhi" style="color:#A78BFA;font-weight:600">--</span><small>UHI</small></div>
         <div class="stat-pill"><i class="ti ti-leaf" style="color:#22C55E;font-size:12px"></i><span id="sb-green" style="color:#22C55E;font-weight:600">--%</span><small>green</small></div>
         <div class="stat-pill"><i class="ti ti-temperature" style="color:#60A5FA;font-size:12px"></i><span id="sb-wx" style="color:#60A5FA;font-weight:600">--</span><small>live</small></div>
       </div>
@@ -130,9 +131,6 @@
         </div>
         <div class="info-block">
           <div class="info-row"><span class="lbl">LST</span><span class="val hot" id="ip-lst">--</span></div>
-          <div class="info-row"><span class="lbl" data-i18n="uhi">UHI index</span><span class="val" id="ip-uhi">--</span></div>
-          <div class="info-row"><span class="lbl" data-i18n="utfvi">UTFVI class</span><span class="val" id="ip-utfvi">--</span></div>
-          <div class="info-row"><span class="lbl" data-i18n="land_use">Land use</span><span class="val" id="ip-lu">--</span></div>
           <div class="info-row"><span class="lbl">NUTS3</span><span class="val" id="ip-nuts">--</span></div>
         </div>
         <div class="info-block">
@@ -143,52 +141,7 @@
           <div class="info-row"><span class="lbl" data-i18n="observed">Observed</span><span class="val" style="font-size:10px" id="ip-obs">--</span></div>
         </div>
       </div>
-     <div id="click-hint"><i class="ti ti-pointer" style="font-size:12px;vertical-align:middle;margin-right:4px"></i><span data-i18n="click_map">Click map to inspect</span></div>
-
-      <!-- Floating Legend -->
-<div class="map-legend" id="map-legend">
-  <div class="leg-title">Legend</div>
-
-  <div class="leg-row">
-    <div class="leg-grad" style="background:linear-gradient(to right,#a8d8ea,#fffde7,#f97316,#ef4444)"></div>
-    <div class="leg-scale"><span>0°C</span><span style="font-weight:600">LST</span><span>60°C</span></div>
-  </div>
-
-  <div class="leg-row leg-row-cat">
-    <span class="leg-label-sm">UHI</span>
-    <div class="leg-cats">
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#1a6fd4"></span><span>much cooler</span></span>
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#00e5ff"></span><span>cooler</span></span>
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#f5c518"></span><span>slightly warmer</span></span>
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#f97316"></span><span>warmer</span></span>
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#6b0000"></span><span>much warmer</span></span>
-    </div>
-  </div>
-
-  <div class="leg-row leg-row-cat">
-    <span class="leg-label-sm">UTFVI</span>
-    <div class="leg-cats">
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#fde8e8"></span><span>none</span></span>
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#f9c4b0"></span><span>weak</span></span>
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#f4845f"></span><span>middle</span></span>
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#e03c2b"></span><span>strong</span></span>
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#a00000"></span><span>stronger</span></span>
-      <span class="leg-cat-item"><span class="leg-sq" style="background:#4a0000"></span><span>strongest</span></span>
-    </div>
-  </div>
-
-  <div class="leg-divider"></div>
-
-  <div class="leg-row leg-row-cat">
-    <span class="leg-cat-item"><span class="leg-sq" style="background:#86EFAC"></span><span>Species</span></span>
-    <span class="leg-cat-item"><span class="leg-sq" style="background:#22C55E"></span><span>Trees</span></span>
-  </div>
-
-  <div class="leg-row leg-row-cat">
-    <span class="leg-cat-item"><span class="leg-dash-sm" style="border-color:#F97316"></span><span>Study area</span></span>
-    <span class="leg-cat-item"><span class="leg-dash-sm"></span><span>NUTS3</span></span>
-  </div>
-</div>
+      <div id="click-hint"><i class="ti ti-pointer" style="font-size:12px;vertical-align:middle;margin-right:4px"></i><span data-i18n="click_map">Click map to inspect</span></div>
     </div>
 
     <!-- RIGHT: Description -->
@@ -253,9 +206,15 @@
   </div>
 
   <!-- ── Footer ── -->
-<footer class="ui-footer">
-  <span class="leg-src" style="opacity:.55;font-size:9px">Landsat 8 &middot; Copernicus &middot; GBIF &middot; Eurostat &middot; Aviation Weather API &middot; University of  Salzburg &middot; v1.0</span>
-</footer>
+  <footer class="ui-footer">
+    <strong data-i18n="legend">Legend</strong>
+    <span class="leg-item"><span class="leg-ramp grad-lst"></span>LST</span>
+    <span class="leg-item"><span class="leg-dot" style="background:#86EFAC;display:inline-block"></span><span data-i18n="gbif">Species</span></span>
+    <span class="leg-item"><span class="leg-dot" style="background:#22C55E;display:inline-block"></span><span data-i18n="trees">Trees</span></span>
+    <span class="leg-item"><span class="leg-dash" style="border-color:#F97316"></span><span data-i18n="study">Study area</span></span>
+    <span class="leg-item"><span class="leg-dash"></span>NUTS3</span>
+    <span class="leg-src">Landsat 8 &middot; Copernicus Land Monitoring Service &middot; GBIF &middot; Eurostat &middot; Aviation Weather API &middot; OpenStreetMap Contributors &middot; Carto &middot; Esri &middot; DigitalGlobe &middot; GeoEye &middot; i-cubed &middot; USDA FSA &middot; USGS &middot; AEX &middot; Getmapping &middot; Aerogrid &middot; IGN &middot; IGP &middot; swisstopo &middot; GIS User Community &middot; University of Salzburg &middot; v1.0</span>
+  </footer>
 </div>
 
 <!-- ── About Modal ── -->
@@ -279,13 +238,13 @@
           <div class="meta-row"><span class="meta-lbl">Version</span><span class="meta-val">1.0</span></div>
           <div class="meta-row"><span class="meta-lbl">Updated</span><span class="meta-val">June 2026</span></div>
           <div class="meta-row"><span class="meta-lbl">Course</span><span class="meta-val">Spatial Data Infrastructures, M.Sc. Applied Geoinformatics</span></div>
-          <div class="meta-row"><span class="meta-lbl">Institution</span><span class="meta-val">University of Salzburg</span></div>
-          <div class="meta-row"><span class="meta-lbl">Supervisor</span><span class="meta-val">Dr Manfred Mittlböck &mdash; Dipl.-Ing., Mag. Eva-Maria Steinbacher  </span></div>
+          <div class="meta-row"><span class="meta-lbl">Institution</span><span class="meta-val">Paris-Lodron University Salzburg &mdash; Z_GIS PLUS</span></div>
+          <div class="meta-row"><span class="meta-lbl">Supervisor</span><span class="meta-val">Prof. Thomas Blaschke</span></div>
         </div>
         <div class="modal-section">
           <h3 class="modal-sh">Team</h3>
           <div class="team-grid">
-            <div class="team-card"><i class="ti ti-code" style="color:var(--acc)"></i><strong>Sikandar Ali</strong><span>Technical Lead &amp; Geospatial Dev</span></div>
+            <div class="team-card"><i class="ti ti-code" style="color:var(--acc)"></i><strong>Sikandar Ali</strong><span>Technical Lead &amp; Geospatial Dev</span><small>s1119720</small></div>
             <div class="team-card"><i class="ti ti-temperature" style="color:#F97316"></i><strong>Laetitia Adam</strong><span>Heat Analysis &amp; Remote Sensing</span></div>
             <div class="team-card"><i class="ti ti-leaf" style="color:#22C55E"></i><strong>Emmanuel Udeonwo</strong><span>Biodiversity &amp; Ecology</span></div>
           </div>
@@ -293,7 +252,7 @@
         <div class="modal-section">
           <h3 class="modal-sh">Description</h3>
           <p class="modal-text">HotEurope is a Spatial Data Infrastructure for urban heat stress monitoring across 11 CIVIS alliance cities in Europe. It integrates Landsat 8 derived Land Surface Temperature (LST), Urban Heat Island (UHI) indices and greenness data to support urban planners in identifying heat-vulnerable areas.</p>
-          <p class="modal-text" style="margin-top:8px">LST and UHI rasters are derived from Landsat 8 Band 10 data averaged over summer months (May&ndash;September) at 100m resolution for 2022 and 2025. Live weather data is sourced from METAR airport stations updated every 30 minutes via the university PostgreSQL database hosted at Department of Geoinformatics, University of Salzburg.</p>
+          <p class="modal-text" style="margin-top:8px">LST and UHI rasters are derived from Landsat 8 Band 10 data averaged over summer months (May&ndash;September) at 100m resolution for 2022 and 2025. Live weather data is sourced from METAR airport stations updated every 30 minutes via the university PostgreSQL database hosted at Z_GIS PLUS Salzburg.</p>
         </div>
         <div class="modal-section">
           <button class="ob-btn ob-next" style="width:100%;justify-content:center;margin-top:4px" onclick="APP.restartOnboarding()">
@@ -304,34 +263,34 @@
 
       <div class="tab-panel" id="tab-data">
         <div class="modal-section">
-          <h3 class="modal-sh">Heat Analysis (GeoServer WMS — Department of Geoinformatics, University of Salzburg)</h3>
-          <div class="src-row"><span class="src-name">LST 2022 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">WMS</a></div>
-          <div class="src-row"><span class="src-name">LST 2025 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">WMS</a></div>
-          <div class="src-row"><span class="src-name">UHI 2022 — Urban Heat Island Effect</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">WMS</a></div>
-          <div class="src-row"><span class="src-name">UHI 2025 — Urban Heat Island Effect</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">WMS</a></div>
-          <div class="src-row"><span class="src-name">UTFVI 2022 — Urban Thermal Field Variance Index</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">WMS</a></div>
-          <div class="src-row"><span class="src-name">UTFVI 2025 — Urban Thermal Field Variance Index</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">WMS</a></div>
+          <h3 class="modal-sh">Heat Analysis (GeoServer WMS — Z_GIS PLUS Salzburg)</h3>
+          <div class="src-row"><span class="src-name">LST 2022 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">LST 2025 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">UHI 2022 — Urban Heat Island Effect</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">UHI 2025 — Urban Heat Island Effect</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">UTFVI 2022 — Urban Thermal Field Variance Index</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">UTFVI 2025 — Urban Thermal Field Variance Index</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
         </div>
         <div class="modal-section">
-          <h3 class="modal-sh">Boundaries (GeoServer WFS — Department of Geoinformatics, University of Salzburg)</h3>
-          <div class="src-row"><span class="src-name">NUTS3 Administrative Boundaries 2021</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:civis_nuts&outputFormat=application/json" target="_blank" rel="noopener">WFS</a></div>
-          <div class="src-row"><span class="src-name">Study Area Boundaries</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:study_area&outputFormat=application/json" target="_blank" rel="noopener">WFS</a></div>
-          <div class="src-row"><span class="src-name">CIVIS City Centroids</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:civis_cities&outputFormat=application/json" target="_blank" rel="noopener">WFS</a></div>
+          <h3 class="modal-sh">Boundaries (GeoServer WFS — Z_GIS PLUS Salzburg)</h3>
+          <div class="src-row"><span class="src-name">NUTS3 Administrative Boundaries 2021</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">Study Area Boundaries</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">CIVIS City Centroids</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
         </div>
         <div class="modal-section">
-          <h3 class="modal-sh">Land Use &amp; Vegetation (Copernicus EEA)</h3>
-          <div class="src-row"><span class="src-name">Urban Atlas Land Use 2018</span><a href="https://www.eea.europa.eu/data-and-maps/data/urban-atlas" target="_blank" rel="noopener">EEA</a></div>
-          <div class="src-row"><span class="src-name">Urban Atlas Street Trees 2018 (Copernicus WMS — all cities)</span><a href="https://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/UA_StreetTreeLayer_2018/MapServer/WMSServer" target="_blank" rel="noopener">WMS</a></div>
-          <div class="src-row"><span class="src-name">Imperviousness Density 2021 (10m)</span><a href="https://land.copernicus.eu/pan-european/high-resolution-layers/imperviousness" target="_blank" rel="noopener">Copernicus HRL</a></div>
+          <h3 class="modal-sh">Land Use &amp; Vegetation (Copernicus / EEA)</h3>
+          <div class="src-row"><span class="src-name">Urban Atlas Land Use 2018</span><span class="src-links"><a href="https://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/UA_UrbanAtlas_2018/MapServer/WMSServer" target="_blank" rel="noopener">WMS</a><a href="https://land.copernicus.eu/en/products/urban-atlas/urban-atlas-2018" target="_blank" rel="noopener">Source</a></span></div>
+          <div class="src-row"><span class="src-name">Urban Atlas Street Trees 2018</span><span class="src-links"><a href="https://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/UA_StreetTreeLayer_2018/MapServer/WMSServer" target="_blank" rel="noopener">WMS</a><a href="https://land.copernicus.eu/en/products/urban-atlas/street-tree-layer-stl-2018" target="_blank" rel="noopener">Source</a></span></div>
+          <div class="src-row"><span class="src-name">Imperviousness Density 2021 (10m)</span><span class="src-links"><a href="https://geoserver.geoville.com/geoserver/nvlcc/ows" target="_blank" rel="noopener">WMS</a><a href="https://land.copernicus.eu/en/products/high-resolution-layer-imperviousness/imperviousness-density-2021" target="_blank" rel="noopener">Source</a></span></div>
         </div>
         <div class="modal-section">
           <h3 class="modal-sh">Biodiversity</h3>
-          <div class="src-row"><span class="src-name">Species Occurrences (Plantae) — Salzburg only</span><a href="https://geoserver22s.zgis.at/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ipsdi_st26:SalzburgPlantae_Export_s1104190&outputFormat=application/json" target="_blank" rel="noopener">WFS</a></div>
+          <div class="src-row"><span class="src-name">Species Occurrences (Plantae) — Salzburg only</span><a href="https://www.gbif.org/occurrence/search?taxon_key=6&country=AT" target="_blank" rel="noopener">GBIF</a></div>
         </div>
         <div class="modal-section">
           <h3 class="modal-sh">Statistics &amp; Weather</h3>
-          <div class="src-row"><span class="src-name">Live METAR Weather (30-min updates)</span><a href="https://www.aviationweather.gov" target="_blank" rel="noopener">Aviation Weather Center</a></div>
-          <div class="src-row"><span class="src-name">City Population Data</span><a href="https://ec.europa.eu/eurostat" target="_blank" rel="noopener">Eurostat</a></div>
+          <div class="src-row"><span class="src-name">Live METAR Weather (30-min updates)</span><a href="https://aviationweather.gov/data/metar/" target="_blank" rel="noopener">Aviation Weather Center</a></div>
+          <div class="src-row"><span class="src-name">City Population Data</span><a href="https://ec.europa.eu/eurostat/web/population-demography/demography-population-stock-balance/database" target="_blank" rel="noopener">Eurostat</a></div>
           <div class="src-row"><span class="src-name">Urban Greenness Index 2025</span><a href="https://green-city-index.org/en/map/" target="_blank" rel="noopener">Green City Index</a></div>
         </div>
       </div>
