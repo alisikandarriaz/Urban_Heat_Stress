@@ -153,12 +153,8 @@ html.light .grp-lbl{color:#5a5a58;}
 .chart-src{flex-shrink:0;font-size:9px;color:var(--txm);margin-top:5px;padding-top:4px;border-top:1px solid var(--bd);}
 
 /* Footer */
-.ui-footer{flex-shrink:0;background:var(--bg2);border-top:1px solid var(--bd);padding:4px 14px;display:flex;align-items:center;gap:2px;min-height:22px;flex-wrap:wrap;}
-.leg-src{font-size:9px;opacity:.55;margin-left:auto;}
-.leg-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--txm);margin-left:8px;white-space:nowrap;}
-.leg-ramp{width:28px;height:7px;border-radius:2px;display:inline-block;}
-.leg-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
-.leg-dash{width:18px;border-bottom:2px dashed #6B7280;display:inline-block;flex-shrink:0;}
+.ui-footer{flex-shrink:0;background:var(--bg2);border-top:1px solid var(--bd);padding:4px 14px;display:flex;align-items:center;min-height:22px;}
+.leg-src{font-size:9px;opacity:.55;}
 
 /* Floating map legend */
 .map-legend{position:absolute;bottom:40px;left:10px;z-index:1000;background:rgba(20,20,18,.88);border:1px solid var(--bd2);border-radius:10px;padding:10px 12px;min-width:165px;backdrop-filter:blur(6px);font-size:11px;color:var(--tx2);}
