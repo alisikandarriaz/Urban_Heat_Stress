@@ -119,6 +119,7 @@ APP.dlXML = function (id) {
     lu:    'metadata/urbanatlas2018_metadata.xml',
     trees: 'metadata/streettrees2018_metadata.xml',
     imp:   'metadata/impervioussurfaces2021_metadata.xml',
+    gbif:  'metadata/gbif_metadata.xml',
   };
   const file = FILE_MAP[id];
   if (file) {

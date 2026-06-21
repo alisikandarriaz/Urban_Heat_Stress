@@ -118,7 +118,7 @@
       <div id="map-loading"><div class="spinner"></div><span id="load-msg">Loading&hellip;</span></div>
 
       <div class="stats-bar" id="stats-bar">
-        <div class="stat-pill"><i class="ti ti-temperature" style="color:#EF4444;font-size:12px"></i><span id="sb-lst" style="color:#EF4444;font-weight:600">--</span><small>LST</small></div>
+        <div class="stat-pill"><i class="ti ti-temperature" style="color:#EF4444;font-size:12px"></i><span id="sb-lst" style="color:#EF4444;font-weight:600">--</span><small data-i18n="lst_short">LST</small></div>
         <div class="stat-pill"><i class="ti ti-arrow-badge-up" style="color:#A78BFA;font-size:12px"></i><span id="sb-uhi" style="color:#A78BFA;font-weight:600">--</span><small>UHI</small></div>
         <div class="stat-pill"><i class="ti ti-leaf" style="color:#22C55E;font-size:12px"></i><span id="sb-green" style="color:#22C55E;font-weight:600">--%</span><small>green</small></div>
         <div class="stat-pill"><i class="ti ti-temperature" style="color:#60A5FA;font-size:12px"></i><span id="sb-wx" style="color:#60A5FA;font-weight:600">--</span><small>live</small></div>
@@ -144,42 +144,42 @@
       <div id="click-hint"><i class="ti ti-pointer" style="font-size:12px;vertical-align:middle;margin-right:4px"></i><span data-i18n="click_map">Click map to inspect</span></div>
 
       <div class="map-legend" id="map-legend">
-        <div class="leg-title">Legend</div>
+        <div class="leg-title" data-i18n="legend">Legend</div>
         <div class="leg-row" id="leg-lst">
-          <div class="leg-label-sm">LST (&deg;C)</div>
+          <div class="leg-label-sm" data-i18n="lst">LST (&deg;C)</div>
           <div class="leg-grad grad-lst"></div>
           <div class="leg-scale"><span>0&deg;C</span><span>60&deg;C</span></div>
         </div>
         <div class="leg-divider"></div>
         <div class="leg-row leg-row-cat" id="leg-uhi">
-          <div class="leg-label-sm">UHI</div>
+          <div class="leg-label-sm" data-i18n="uhi">UHI</div>
           <div class="leg-cats">
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#818CF8"></span>much cooler</div>
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#93C5FD"></span>cooler</div>
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#FCD34D"></span>slightly warmer</div>
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#F97316"></span>warmer</div>
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#DC2626"></span>much warmer</div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#818CF8"></span><span data-i18n="uhi_much_cooler">much cooler</span></div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#93C5FD"></span><span data-i18n="uhi_cooler">cooler</span></div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#FCD34D"></span><span data-i18n="uhi_slightly_warmer">slightly warmer</span></div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#F97316"></span><span data-i18n="uhi_warmer">warmer</span></div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#DC2626"></span><span data-i18n="uhi_much_warmer">much warmer</span></div>
           </div>
         </div>
         <div class="leg-divider"></div>
         <div class="leg-row leg-row-cat" id="leg-utfvi">
-          <div class="leg-label-sm">UTFVI</div>
+          <div class="leg-label-sm" data-i18n="utfvi">UTFVI</div>
           <div class="leg-cats">
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#D1FAE5"></span>none</div>
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#6EE7B7"></span>weak</div>
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#F59E0B"></span>middle</div>
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#F97316"></span>strong</div>
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#EF4444"></span>stronger</div>
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#7F1D1D"></span>strongest</div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#D1FAE5"></span><span data-i18n="utfvi_none">none</span></div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#6EE7B7"></span><span data-i18n="utfvi_weak">weak</span></div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#F59E0B"></span><span data-i18n="utfvi_middle">middle</span></div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#F97316"></span><span data-i18n="utfvi_strong">strong</span></div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#EF4444"></span><span data-i18n="utfvi_stronger">stronger</span></div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#7F1D1D"></span><span data-i18n="utfvi_strongest">strongest</span></div>
           </div>
         </div>
         <div class="leg-divider"></div>
         <div class="leg-row leg-row-cat">
           <div class="leg-cats">
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#86EFAC;border-radius:50%"></span>Species</div>
-            <div class="leg-cat-item"><span class="leg-sq" style="background:#22C55E"></span>Trees</div>
-            <div class="leg-cat-item"><span class="leg-dash-sm" style="border-color:#F97316"></span>Study area</div>
-            <div class="leg-cat-item"><span class="leg-dash-sm"></span>NUTS3</div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#86EFAC;border-radius:50%"></span><span data-i18n="gbif">Species</span></div>
+            <div class="leg-cat-item"><span class="leg-sq" style="background:#22C55E"></span><span data-i18n="trees">Trees</span></div>
+            <div class="leg-cat-item"><span class="leg-dash-sm" style="border-color:#F97316"></span><span data-i18n="study">Study area</span></div>
+            <div class="leg-cat-item"><span class="leg-dash-sm"></span><span data-i18n="nuts">NUTS3</span></div>
           </div>
         </div>
       </div>
@@ -263,21 +263,21 @@
       <button class="modal-close" onclick="APP.closeAbout()"><i class="ti ti-x"></i></button>
     </div>
     <div class="modal-tabs">
-      <button class="mtab active" data-tab="about" onclick="APP.switchTab('about')">About</button>
-      <button class="mtab" data-tab="data" onclick="APP.switchTab('data')">Data Sources</button>
+      <button class="mtab active" data-tab="about" onclick="APP.switchTab('about')" data-i18n="about">About</button>
+      <button class="mtab" data-tab="data" onclick="APP.switchTab('data')" data-i18n="data_sources">Data Sources</button>
     </div>
     <div class="modal-body">
 
       <div class="tab-panel active" id="tab-about">
         <div class="modal-section">
-          <div class="meta-row"><span class="meta-lbl">Version</span><span class="meta-val">1.0</span></div>
-          <div class="meta-row"><span class="meta-lbl">Updated</span><span class="meta-val">June 2026</span></div>
-          <div class="meta-row"><span class="meta-lbl">Course</span><span class="meta-val">Spatial Data Infrastructures, M.Sc. Applied Geoinformatics</span></div>
-          <div class="meta-row"><span class="meta-lbl">Institution</span><span class="meta-val">Paris-Lodron University Salzburg &mdash; Z_GIS PLUS</span></div>
-          <div class="meta-row"><span class="meta-lbl">Supervisor</span><span class="meta-val">Prof. Thomas Blaschke</span></div>
+          <div class="meta-row"><span class="meta-lbl" data-i18n="version">Version</span><span class="meta-val">1.0</span></div>
+          <div class="meta-row"><span class="meta-lbl" data-i18n="updated">Updated</span><span class="meta-val">June 2026</span></div>
+          <div class="meta-row"><span class="meta-lbl" data-i18n="course">Course</span><span class="meta-val">Spatial Data Infrastructures, M.Sc. Applied Geoinformatics</span></div>
+          <div class="meta-row"><span class="meta-lbl" data-i18n="institution">Institution</span><span class="meta-val">Paris-Lodron University Salzburg &mdash; Z_GIS PLUS</span></div>
+          <div class="meta-row"><span class="meta-lbl" data-i18n="supervisor">Supervisor</span><span class="meta-val">Prof. Thomas Blaschke</span></div>
         </div>
         <div class="modal-section">
-          <h3 class="modal-sh">Team</h3>
+          <h3 class="modal-sh" data-i18n="team">Team</h3>
           <div class="team-grid">
             <div class="team-card"><i class="ti ti-code" style="color:var(--acc)"></i><strong>Sikandar Ali</strong><span>Technical Lead &amp; Geospatial Dev</span><small>s1119720</small></div>
             <div class="team-card"><i class="ti ti-temperature" style="color:#F97316"></i><strong>Laetitia Adam</strong><span>Heat Analysis &amp; Remote Sensing</span></div>
@@ -285,20 +285,20 @@
           </div>
         </div>
         <div class="modal-section">
-          <h3 class="modal-sh">Description</h3>
+          <h3 class="modal-sh" data-i18n="description">Description</h3>
           <p class="modal-text">HotEurope is a Spatial Data Infrastructure for urban heat stress monitoring across 11 CIVIS alliance cities in Europe. It integrates Landsat 8 derived Land Surface Temperature (LST), Urban Heat Island (UHI) indices and greenness data to support urban planners in identifying heat-vulnerable areas.</p>
           <p class="modal-text" style="margin-top:8px">LST and UHI rasters are derived from Landsat 8 Band 10 data averaged over summer months (May&ndash;September) at 100m resolution for 2022 and 2025. Live weather data is sourced from METAR airport stations updated every 30 minutes via the university PostgreSQL database hosted at Z_GIS PLUS Salzburg.</p>
         </div>
         <div class="modal-section">
           <button class="ob-btn ob-next" style="width:100%;justify-content:center;margin-top:4px" onclick="APP.restartOnboarding()">
-            <i class="ti ti-player-play"></i>&nbsp; Replay tutorial
+            <i class="ti ti-player-play"></i>&nbsp; <span data-i18n="replay_tutorial">Replay tutorial</span>
           </button>
         </div>
       </div>
 
       <div class="tab-panel" id="tab-data">
         <div class="modal-section">
-          <h3 class="modal-sh">Heat Analysis (GeoServer WMS — Z_GIS PLUS Salzburg)</h3>
+          <h3 class="modal-sh" data-i18n="src_heat">Heat Analysis (GeoServer WMS — Z_GIS PLUS Salzburg)</h3>
           <div class="src-row"><span class="src-name">LST 2022 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
           <div class="src-row"><span class="src-name">LST 2025 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
           <div class="src-row"><span class="src-name">UHI 2022 — Urban Heat Island Effect</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
@@ -307,27 +307,37 @@
           <div class="src-row"><span class="src-name">UTFVI 2025 — Urban Thermal Field Variance Index</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
         </div>
         <div class="modal-section">
-          <h3 class="modal-sh">Boundaries (GeoServer WFS — Z_GIS PLUS Salzburg)</h3>
+          <h3 class="modal-sh" data-i18n="src_boundaries">Boundaries (GeoServer WFS — Z_GIS PLUS Salzburg)</h3>
           <div class="src-row"><span class="src-name">NUTS3 Administrative Boundaries 2021</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
           <div class="src-row"><span class="src-name">Study Area Boundaries</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
           <div class="src-row"><span class="src-name">CIVIS City Centroids</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
         </div>
         <div class="modal-section">
-          <h3 class="modal-sh">Land Use &amp; Vegetation (Copernicus / EEA)</h3>
+          <h3 class="modal-sh" data-i18n="src_landuse">Land Use &amp; Vegetation (Copernicus / EEA)</h3>
           <div class="src-row"><span class="src-name">Urban Atlas Land Use 2018</span><span class="src-links"><a href="https://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/UA_UrbanAtlas_2018/MapServer/WMSServer" target="_blank" rel="noopener">WMS</a><a href="https://land.copernicus.eu/en/products/urban-atlas/urban-atlas-2018" target="_blank" rel="noopener">Source</a></span></div>
           <div class="src-row"><span class="src-name">Urban Atlas Street Trees 2018</span><span class="src-links"><a href="https://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/UA_StreetTreeLayer_2018/MapServer/WMSServer" target="_blank" rel="noopener">WMS</a><a href="https://land.copernicus.eu/en/products/urban-atlas/street-tree-layer-stl-2018" target="_blank" rel="noopener">Source</a></span></div>
           <div class="src-row"><span class="src-name">Imperviousness Density 2021 (10m)</span><span class="src-links"><a href="https://geoserver.geoville.com/geoserver/nvlcc/ows" target="_blank" rel="noopener">WMS</a><a href="https://land.copernicus.eu/en/products/high-resolution-layer-imperviousness/imperviousness-density-2021" target="_blank" rel="noopener">Source</a></span></div>
         </div>
         <div class="modal-section">
-          <h3 class="modal-sh">Biodiversity</h3>
+          <h3 class="modal-sh" data-i18n="BIODIVERSITY">Biodiversity</h3>
           <div class="src-row"><span class="src-name">Species Occurrences (Plantae) — Salzburg only</span><a href="https://www.gbif.org/occurrence/search?taxon_key=6&country=AT" target="_blank" rel="noopener">GBIF</a></div>
         </div>
         <div class="modal-section">
-          <h3 class="modal-sh">Statistics &amp; Weather</h3>
+          <h3 class="modal-sh" data-i18n="src_stats">Statistics &amp; Weather</h3>
           <div class="src-row"><span class="src-name">Live METAR Weather (30-min updates)</span><a href="https://aviationweather.gov/data/metar/" target="_blank" rel="noopener">Aviation Weather Center</a></div>
           <div class="src-row"><span class="src-name">City Population Data</span><a href="https://ec.europa.eu/eurostat/web/population-demography/demography-population-stock-balance/database" target="_blank" rel="noopener">Eurostat</a></div>
           <div class="src-row"><span class="src-name">Urban Greenness Index 2025</span><a href="https://green-city-index.org/en/map/" target="_blank" rel="noopener">Green City Index</a></div>
         </div>
+        <div class="modal-section">
+          <h3 class="modal-sh" data-i18n="src_ai">AI Assistance</h3>
+          <div class="src-row"><span class="src-name">Claude Sonnet 4.6 — AI coding assistant (Anthropic)</span><a href="https://www.anthropic.com/claude" target="_blank" rel="noopener">Anthropic</a></div>
+        </div>
+        <div class="modal-section">
+           <h3 class="modal-sh" data-i18n="src_libs">Libraries &amp; Tools</h3>
+           <div class="src-row"><span class="src-name">Leaflet 1.9.4 — interactive map library</span><a href="https://leafletjs.com" target="_blank" rel="noopener">leafletjs.com</a></div>
+           <div class="src-row"><span class="src-name">Chart.js 4.4.1 — charting library</span><a href="https://www.chartjs.org" target="_blank" rel="noopener">chartjs.org</a></div>
+           <div class="src-row"><span class="src-name">Tabler Icons — icon font</span><a href="https://tabler.io/icons" target="_blank" rel="noopener">tabler.io/icons</a></div>
+          </div>
       </div>
     </div>
   </div>
