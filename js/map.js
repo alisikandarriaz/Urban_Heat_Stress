@@ -19,7 +19,7 @@ APP.initMap = function () {
   Object.entries(APP.WMS_CONFIG).forEach(([id,cfg]) => {
     APP.WMS[id] = L.tileLayer.wms(cfg.url, { layers:cfg.layer, format:cfg.opts.format||'image/png', transparent:true, ...cfg.opts });
   });
-  APP.map.on('click', APP._onMapClick);
+  // APP.map.on('click', APP._onMapClick); // disabled
   APP._loadAllWFS();
 };
 

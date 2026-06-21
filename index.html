@@ -124,6 +124,7 @@
         <div class="stat-pill"><i class="ti ti-temperature" style="color:#60A5FA;font-size:12px"></i><span id="sb-wx" style="color:#60A5FA;font-weight:600">--</span><small>live</small></div>
       </div>
 
+      <!--
       <div id="info-panel">
         <div class="info-hdr">
           <span data-i18n="feature_info">Feature info</span>
@@ -142,7 +143,8 @@
         </div>
       </div>
       <div id="click-hint"><i class="ti ti-pointer" style="font-size:12px;vertical-align:middle;margin-right:4px"></i><span data-i18n="click_map">Click map to inspect</span></div>
-
+      -->
+      
       <div class="map-legend" id="map-legend">
         <div class="leg-title" data-i18n="legend">Legend</div>
         <div class="leg-row" id="leg-lst">
@@ -273,8 +275,8 @@
           <div class="meta-row"><span class="meta-lbl" data-i18n="version">Version</span><span class="meta-val">1.0</span></div>
           <div class="meta-row"><span class="meta-lbl" data-i18n="updated">Updated</span><span class="meta-val">June 2026</span></div>
           <div class="meta-row"><span class="meta-lbl" data-i18n="course">Course</span><span class="meta-val">Spatial Data Infrastructures, M.Sc. Applied Geoinformatics</span></div>
-          <div class="meta-row"><span class="meta-lbl" data-i18n="institution">Institution</span><span class="meta-val">Paris-Lodron University Salzburg &mdash; Z_GIS PLUS</span></div>
-          <div class="meta-row"><span class="meta-lbl" data-i18n="supervisor">Supervisor</span><span class="meta-val">Prof. Thomas Blaschke</span></div>
+          <div class="meta-row"><span class="meta-lbl" data-i18n="institution">Institution</span><span class="meta-val">University of Salzburg &mdash; Department of Geoinformatics</span></div>
+          <div class="meta-row"><span class="meta-lbl" data-i18n="supervisor">Supervisor</span><span class="meta-val">Dr Manfred Mittlböck &amp; Mag. Eva-Maria Steinbacher</span></div>
         </div>
         <div class="modal-section">
           <h3 class="modal-sh" data-i18n="team">Team</h3>
@@ -287,7 +289,7 @@
         <div class="modal-section">
           <h3 class="modal-sh" data-i18n="description">Description</h3>
           <p class="modal-text">HotEurope is a Spatial Data Infrastructure for urban heat stress monitoring across 11 CIVIS alliance cities in Europe. It integrates Landsat 8 derived Land Surface Temperature (LST), Urban Heat Island (UHI) indices and greenness data to support urban planners in identifying heat-vulnerable areas.</p>
-          <p class="modal-text" style="margin-top:8px">LST and UHI rasters are derived from Landsat 8 Band 10 data averaged over summer months (May&ndash;September) at 100m resolution for 2022 and 2025. Live weather data is sourced from METAR airport stations updated every 30 minutes via the university PostgreSQL database hosted at Z_GIS PLUS Salzburg.</p>
+          <p class="modal-text" style="margin-top:8px">LST and UHI rasters are derived from Landsat 8 Band 10 data averaged over summer months (May&ndash;September) at 100m resolution for 2022 and 2025. Live weather data is sourced from METAR airport stations updated every 30 minutes via the university PostgreSQL database hosted at Department of Geoinformatics University of Salzburg.</p>
         </div>
         <div class="modal-section">
           <button class="ob-btn ob-next" style="width:100%;justify-content:center;margin-top:4px" onclick="APP.restartOnboarding()">
@@ -298,7 +300,7 @@
 
       <div class="tab-panel" id="tab-data">
         <div class="modal-section">
-          <h3 class="modal-sh" data-i18n="src_heat">Heat Analysis (GeoServer WMS — Z_GIS PLUS Salzburg)</h3>
+          <h3 class="modal-sh" data-i18n="src_heat">Heat Analysis (GeoServer WMS — Department of Geoinformatics University of Salzburg)</h3>
           <div class="src-row"><span class="src-name">LST 2022 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
           <div class="src-row"><span class="src-name">LST 2025 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
           <div class="src-row"><span class="src-name">UHI 2022 — Urban Heat Island Effect</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
@@ -307,7 +309,7 @@
           <div class="src-row"><span class="src-name">UTFVI 2025 — Urban Thermal Field Variance Index</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
         </div>
         <div class="modal-section">
-          <h3 class="modal-sh" data-i18n="src_boundaries">Boundaries (GeoServer WFS — Z_GIS PLUS Salzburg)</h3>
+          <h3 class="modal-sh" data-i18n="src_boundaries">Boundaries (GeoServer WFS — Department of Geoinformatics University of Salzburg))</h3>
           <div class="src-row"><span class="src-name">NUTS3 Administrative Boundaries 2021</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
           <div class="src-row"><span class="src-name">Study Area Boundaries</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
           <div class="src-row"><span class="src-name">CIVIS City Centroids</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
