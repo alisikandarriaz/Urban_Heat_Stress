@@ -229,4 +229,4 @@ APP._onMapClick = function () {
 
 APP.showLoad=m=>{document.getElementById('load-msg').textContent=m;document.getElementById('map-loading').className='show';};
 APP.hideLoad=()=>{document.getElementById('map-loading').className='';};
-APP.closeInfo=()=>{document.getElementById('info-panel').style.display='none';document.getElementById('click-hint').style.display='block';};
+APP.closeInfo=()=>{const ip=document.getElementById('info-panel');const ch=document.getElementById('click-hint');if(ip)ip.style.display='none';if(ch)ch.style.display='block';};
