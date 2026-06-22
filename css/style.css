@@ -231,10 +231,13 @@ html.light .map-legend{background:rgba(255,255,255,.92);border-color:var(--bd);}
 
 /* ── Small laptop / large tablet (≤ 1280px) ── */
 @media(max-width:1280px){
-  .right-panel{width:185px;}
+.right-panel{width:185px;}
   .left-panel{width:200px;}
   .city-sel{min-width:170px;}
   .app-title{font-size:16px;}
+  .map-legend{max-height:52vh;overflow-y:auto;font-size:10px;padding:8px 10px;}
+  .leg-cat-item{font-size:9px;}
+  .leg-label-sm{font-size:9px;}
 }
 
 /* ── Tablet (≤ 1024px) ── */
