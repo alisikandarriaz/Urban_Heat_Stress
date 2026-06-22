@@ -18,7 +18,8 @@ APP.WMS_CONFIG = {
   utfvi2025: { url:'https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms', layer:'ipsdi_st26:UTFVI2025', opts:{version:'1.1.0',transparent:true,format:'image/png',attribution:'© Z_GIS PLUS Salzburg'} },
   lu:    { url:'https://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/UA_UrbanAtlas_2018/MapServer/WMSServer', layer:'Land_Use_vector52160',  opts:{version:'1.3.0',transparent:true,format:'image/png'} },
   trees: { url:'https://image.discomap.eea.europa.eu/arcgis/services/UrbanAtlas/UA_StreetTreeLayer_2018/MapServer/WMSServer', layer:'STL_2018_Vector43148', opts:{version:'1.3.0',transparent:true,format:'image/png',uppercase:true} },
-  imp: { url:'https://image.discomap.eea.europa.eu/arcgis/services/GioLandPublic/HRL_ImperviousnessDensity_2018/ImageServer/WMSServer', layer:'HRL_ImperviousnessDensity_2018', opts:{version:'1.3.0',transparent:true,format:'image/png'} },
+  imp:   { url:'https://geoserver.geoville.com/geoserver/nvlcc/ows', layer:'HRL_NVLCC_IMD_10m', opts:{version:'1.3.0',transparent:true,format:'image/png',crs:L.CRS.EPSG3857} },
+};
 
 APP.YEAR_LAYERS = {
   lst:   { '2022':'lst2022',   '2025':'lst2025'   },
