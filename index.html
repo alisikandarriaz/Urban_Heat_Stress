@@ -118,10 +118,10 @@
       <div id="map-loading"><div class="spinner"></div><span id="load-msg">Loading&hellip;</span></div>
 
       <div class="stats-bar" id="stats-bar">
-        <div class="stat-pill"><i class="ti ti-temperature" style="color:#EF4444;font-size:12px"></i><span id="sb-lst" style="color:#EF4444;font-weight:600">--</span><small data-i18n="lst_short">LST</small></div>
+        <!--<div class="stat-pill"><i class="ti ti-temperature" style="color:#EF4444;font-size:12px"></i><span id="sb-lst" style="color:#EF4444;font-weight:600">--</span><small data-i18n="lst_short">LST</small></div>-->
        <!-- <div class="stat-pill"><i class="ti ti-arrow-badge-up" style="color:#A78BFA;font-size:12px"></i><span id="sb-uhi" style="color:#A78BFA;font-weight:600">--</span><small>UHI</small></div>-->
-        <div class="stat-pill"><i class="ti ti-leaf" style="color:#22C55E;font-size:12px"></i><span id="sb-green" style="color:#22C55E;font-weight:600">--%</span><small>green</small></div>
-        <div class="stat-pill"><i class="ti ti-temperature" style="color:#60A5FA;font-size:12px"></i><span id="sb-wx" style="color:#60A5FA;font-weight:600">--</span><small>live</small></div>
+        <!--<div class="stat-pill"><i class="ti ti-leaf" style="color:#22C55E;font-size:12px"></i><span id="sb-green" style="color:#22C55E;font-weight:600">--%</span><small>green</small></div>-->
+       <!--  <div class="stat-pill"><i class="ti ti-temperature" style="color:#60A5FA;font-size:12px"></i><span id="sb-wx" style="color:#60A5FA;font-weight:600">--</span><small>live</small></div>-->
       </div>
 
       <!--
@@ -301,18 +301,18 @@
       <div class="tab-panel" id="tab-data">
         <div class="modal-section">
           <h3 class="modal-sh" data-i18n="src_heat">Heat Analysis (GeoServer WMS — Department of Geoinformatics University of Salzburg)</h3>
-          <div class="src-row"><span class="src-name">LST 2022 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
-          <div class="src-row"><span class="src-name">LST 2025 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
-          <div class="src-row"><span class="src-name">UHI 2022 — Urban Heat Island Effect</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
-          <div class="src-row"><span class="src-name">UHI 2025 — Urban Heat Island Effect</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
-          <div class="src-row"><span class="src-name">UTFVI 2022 — Urban Thermal Field Variance Index</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
-          <div class="src-row"><span class="src-name">UTFVI 2025 — Urban Thermal Field Variance Index</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">LST 2022 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">LST 2025 — Land Surface Temperature (summer avg)</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">UHI 2022 — Urban Heat Island Effect</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">UHI 2025 — Urban Heat Island Effect</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">UTFVI 2022 — Urban Thermal Field Variance Index</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">UTFVI 2025 — Urban Thermal Field Variance Index</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wms?service=WMS&version=1.1.0&request=GetCapabilities" target="_blank" rel="noopener">GeoServer</a></div>
         </div>
         <div class="modal-section">
           <h3 class="modal-sh" data-i18n="src_boundaries">Boundaries (GeoServer WFS — Department of Geoinformatics University of Salzburg))</h3>
-          <div class="src-row"><span class="src-name">NUTS3 Administrative Boundaries 2021</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
-          <div class="src-row"><span class="src-name">Study Area Boundaries</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
-          <div class="src-row"><span class="src-name">CIVIS City Centroids</span><a href="https://geoserver22s.zgis.at/geoserver/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">NUTS3 Administrative Boundaries 2021</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wfs?service=WFS&version=1.0.0&request=GetCapabilities" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">Study Area Boundaries</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wfs?service=WFS&version=1.0.0&request=GetCapabilities" target="_blank" rel="noopener">GeoServer</a></div>
+          <div class="src-row"><span class="src-name">CIVIS City Centroids</span><a href="https://geoserver22s.zgis.at/geoserver/ipsdi_st26/wfs?service=WFS&version=1.0.0&request=GetCapabilities" target="_blank" rel="noopener">GeoServer</a></div>
         </div>
         <div class="modal-section">
           <h3 class="modal-sh" data-i18n="src_landuse">Land Use &amp; Vegetation (Copernicus / EEA)</h3>
